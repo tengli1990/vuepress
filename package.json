@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vuepress dev docs",
-    "build": "vuepress build docs",
-    "deploy":"bash deploy.sh"
+    "client:dev": "scripty",
+    "client:build": "scripty",
+    "server:build": "scripty"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "scripty": "^2.0.0"
+  }
 }
