@@ -7,31 +7,25 @@ module.exports = {
   base: '/', // 这是部署到github相关的配置
   serviceWorker: true,
   markdown: {
-    lineNumbers: false // 代码块显示行号
+    lineNumbers: true // 代码块显示行号
   },
   themeConfig: {
     nav:[ // 导航栏配置
-      {text: '基础', link: '/basic/' },
       {text: '博客', link: '/blog/' },
       {text: '算法', link: '/algorithm/'},
       {text: '阅读', link: '/books/'},
       {text: 'github', link: 'https://github.com/tengli1990/vuepress'}      
     ],
     sidebar: {
-      '/basic/':[
-        {
-          title:'基础',
-          collapsable: false,
-          children:['js']
-        }
-      ],
       '/blog/': [
         {
           title: '网络协议',   // 必要的
           collapsable: false, // 可选的, 默认值是 true,
           children: [
-            'http',
-            'https'
+            'network-http',
+            'network-https',
+            'network-tcp',
+            'network-safe',
           ]
         },
         {
@@ -50,6 +44,6 @@ module.exports = {
         },
       ]
     },
-    sidebarDepth: 2, // 侧边栏显示2级
+    sidebarDepth: 3, // 侧边栏显示2级
   }
 };
