@@ -14,7 +14,7 @@ module.exports = {
       {text: '博客', link: '/blog/' },
       {text: '算法', link: '/algorithm/'},
       {text: '阅读', link: '/books/'},
-      {text: 'github', link: 'https://github.com/tengli1990/vuepress'}      
+      {text: 'GitHub', link: 'https://github.com/tengli1990/vuepress'}      
     ],
     sidebar: {
       '/blog/': [
