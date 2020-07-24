@@ -12,6 +12,7 @@ module.exports = {
   themeConfig: {
     nav:[ // 导航栏配置
       {text: '博客', link: '/blog/' },
+      {text: '每日一题', link: '/daily/' },
       {text: '算法', link: '/algorithm/'},
       {text: '阅读', link: '/books/'},
       {text: 'GitHub', link: 'https://github.com/tengli1990/vuepress'}      
@@ -20,7 +21,7 @@ module.exports = {
       '/blog/': [
         {
           title: '网络协议',   // 必要的
-          collapsable: false, // 可选的, 默认值是 true,
+          collapsable: true, // 可选的, 默认值是 true,
           children: [
             'network-http',
             'network-https',
@@ -42,8 +43,12 @@ module.exports = {
             'performance'
           ]
         },
-      ]
+      ],
+      '/daily/':[{
+        title:'答案解析', 
+        path:'/daily/answer'
+      }],
     },
-    sidebarDepth: 3, // 侧边栏显示2级
+    sidebarDepth: 1, // 侧边栏显示2级
   }
 };
