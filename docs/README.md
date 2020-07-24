@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: /ico.jpg
+heroImage: /banner.jpg
 heroText: 李腾的前端日志
 tagline: 欢迎访问我的前端日志
 actionText: 开始阅读 →
