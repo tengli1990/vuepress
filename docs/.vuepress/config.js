@@ -21,7 +21,7 @@ module.exports = {
       '/blog/': [
         {
           title: '网络协议',   // 必要的
-          collapsable: true, // 可选的, 默认值是 true,
+          collapsable: false, // 可选的, 默认值是 true,
           children: [
             'network-http',
             'network-https',
@@ -40,7 +40,8 @@ module.exports = {
           title: '性能优化',   // 必要的
           collapsable: false, // 可选的, 默认值是 true,
           children: [
-            'performance'
+            'performance-basic',
+            'performance-browser'
           ]
         },
       ],
