@@ -15,12 +15,13 @@ module.exports = {
       {text: '每日一题', link: '/daily/' },
       {text: '算法', link: '/algorithm/'},
       {text: '阅读', link: '/books/'},
-      {text: 'GitHub', link: 'https://github.com/tengli1990/vuepress'}      
+      // {text: 'GitHub', link: 'https://github.com/tengli1990/vuepress'}      
     ],
     sidebar: {
       '/blog/': [
         {
           title:'函数式编程',
+          collapsable: false, 
           children:[
             'fp'
           ]
@@ -37,14 +38,14 @@ module.exports = {
         },
         {
           title: '项目工程化',   // 必要的
-          collapsable: false, // 可选的, 默认值是 true,
+          collapsable: false, 
           children: [
             'engineering'
           ]
         },
         {
           title: '性能优化',   // 必要的
-          collapsable: false, // 可选的, 默认值是 true,
+          collapsable: false, 
           children: [
             'performance-basic',
             'performance-browser'
@@ -56,7 +57,12 @@ module.exports = {
         path:'/daily/answer'
       }],
     },
-    sidebarDepth: 1, // 侧边栏显示2级
+    sidebarDepth: 2, // 侧边栏显示1级
+    smoothScroll: true, // 启用页面滚动效果
+    repo: 'https://github.com/tengli1990/vuepress',
+    docsDir: 'docs',
+    editLinks: true, 
+    editLinkText: '在 GitHub 上编辑此页',
     lastUpdated: '上次更新时间',
   }
 };

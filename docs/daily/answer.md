@@ -1,3 +1,14 @@
+## Day02-比较以下表达式1、2、3大小的结果
+### 答案
+``` javascript
+true false
+```
+### 解析
+1、运算符 `>` `<` 一般是按照从左到右计算。
+2、题1: `1<2 = true` ,然后 `true < 3`,因为`true == 1`, 所以结果为true。
+3、题2: `3>2 = true` ,然后 `true > 1`,因为`true == 1`, 所以结果为false。
+
+
 ## Day01 项目中如何进行异常捕获？
 
 ### 一、代码执行的错误捕获
@@ -47,6 +58,7 @@ window.addEventListener('error',(msg,url,row,col,error) => {
 
 * Vue有 `errorHandler` 可以捕获错误
 * React有 `componentDidCatch` 可以捕获错误
+
 
 
 
