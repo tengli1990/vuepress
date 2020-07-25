@@ -20,6 +20,12 @@ module.exports = {
     sidebar: {
       '/blog/': [
         {
+          title:'函数式编程',
+          children:[
+            'fp'
+          ]
+        },
+        {
           title: '网络协议',   // 必要的
           collapsable: false, // 可选的, 默认值是 true,
           children: [
@@ -51,5 +57,6 @@ module.exports = {
       }],
     },
     sidebarDepth: 1, // 侧边栏显示2级
+    lastUpdated: '上次更新时间',
   }
 };
