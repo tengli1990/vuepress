@@ -56,7 +56,7 @@
 
 ## 渲染引擎的结构与工作流程
  
-<img src='/browser-workflow.png'>
+![浏览器渲染引擎工作原理](/browser-workflow.png)
 
 ##  Chrome 架构
 
