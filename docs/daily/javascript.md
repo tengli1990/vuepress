@@ -75,4 +75,39 @@ sidebarDepth: 1
 :::
 
 
-## 03 
+## 03 Javascript中如何模拟实现方法的重载
+
+::: details 查看答案
+### 一、什么是函数重载
+
+函数重载是函数的一种特殊情况，为方便使用，允许在同一个范围中声明几个功能类似的同名函数，但是这些同名函数形式参数（个数、类型、或顺序）必须不同，也就是说同一个函数完成不同的功能
+
+### 二、利用闭包特性模拟
+
+``` javascript
+function addMethod(obj, name, fn){
+  var old = obj[name]
+  obj[name] = function(){
+    if(fn.length === arguments.length){
+      return fn.apply(this,arguments);
+    }else if(typeof old === 'function'){
+      return old.apply(this,arguments);
+    }
+  }
+
+  const methods = {}
+  addMethod(methods,'add', function(){return 0})
+  addMethod(methods,'add', function(a){return a})
+  addMethod(methods,'add', function(a,b){return a+b})
+  addMethod(methods,'add', function(a,b,c){return a+b+c})
+
+  console.log(methods.add(1,2,3)) // 6
+  console.log(methods.add(1,2)) // 3
+}
+
+```
+
+addMethod 接收3个参数；目标对象，目标方法名，函数体，当函数被调用时；  
+1、先将目标 obj[name] 的值存入old中，起初old的值可能不是一个函数。  
+2、接着向obj[name] 赋值一个代理函数，并且由于变量old、fn在代理中被调用，所以old、fn将常驻内存不被回收。  
+:::

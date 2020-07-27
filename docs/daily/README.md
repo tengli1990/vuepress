@@ -4,7 +4,7 @@ editLinkText: false
 lastUpdated: false
 ---
 
-<BlogTest/>
+<DailyIndex/>
 
 
 

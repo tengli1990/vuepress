@@ -1,4 +1,4 @@
-import Test from './components/test.vue'
+import DailyIndex from './components/daily/index.vue'
 
 // 使用异步函数也是可以的
 export default ({
@@ -8,6 +8,6 @@ export default ({
   siteData, // 站点元数据
   isServer // 当前应用配置是处于 服务端渲染 或 客户端
 }) => {
-  Vue.component('BlogTest',Test)
+  Vue.component('DailyIndex',DailyIndex)
   // ...做一些其他的应用级别的优化
 }
