@@ -50,7 +50,9 @@ module.exports = {
           collapsable: false,
           children: [
             'performance-basic',
-            'performance-browser'
+            'performance-browser',
+            'performance-h5',
+            'performance-node'
           ]
         },
       ],
@@ -67,6 +69,10 @@ module.exports = {
           title: 'vue',
           path: '/daily/vue'
         },
+        {
+          title: '工程化',   
+          path: '/daily/engineering'
+        }
       ],
     },
     postcss: [require('autoprefixer')],
@@ -80,7 +86,6 @@ module.exports = {
     editLinkText: '在 GitHub 上编辑此页',
     lastUpdated: '上次更新时间',
     configureWebpack: (config, isServer) => {
-      console.log(11111,config)
       if (!isServer) {
         // 修改客户端的 webpack 配置
       }
