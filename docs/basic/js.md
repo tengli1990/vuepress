@@ -1,3 +1,0 @@
-# javascript
-
-## 闭包
