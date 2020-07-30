@@ -33,31 +33,60 @@
 
 * 结构
 
-  用户界面(User Interface)   
-  浏览器引擎(Browser Engine)  
-  渲染引擎(Rendering Engine)  
-  网络(Networking)  
-  XML解析器(XML Parser)  
-  显示后端(Display Backend)  
-  数据持久层(Data Persistence) 
+<img src="/browser-structure.png">
+
+  User Interface: 用户界面  
+  Browser Engine: 浏览器引擎  
+  Rendering Engine: 渲染引擎  
+  Networking: 网络  
+  XML Parser: XML解析器  
+  Display Backend: 显示后端    
+  Data Persistence: 数据持久层
 
 ## 常见的渲染引擎
 
-* 渲染引擎:能够能够将HTML/CSS/JavaScript文本及相应的资源文件转换成图像结果。
-* 渲染引擎的种类:
+* 渲染引擎：能够能够将HTML/CSS/JavaScript文本及相应的资源文件转换成图像结果。
+* 渲染引擎的种类：
 
-|  渲染引擎   | 浏览器  |
-|  ----  | ----  |
-| Trident  |  IE、Edge（旧） |
-| Gecko  | Firefox |
-| WebKit | Safari |
+|  渲染引擎           | 浏览器  |
+| ------------------ | ----  |
+| Trident            |  IE、Edge（旧） |
+| Gecko              | Firefox |
+| WebKit             | Safari |
 | Blink(WebKit fork) | Chromium/Chrome，Opera，Edge(新) |
-
+ 
 
 ## 渲染引擎的结构与工作流程
  
 ![浏览器渲染引擎工作原理](/browser-workflow.png)
 
+### 解析 
+`解析HTML构造DOM树` -> `构造渲染树`
+|  EN  |  ZN  | 
+|------|------|
+| HTML Parser | HTML解析器 | 
+| CSS Parser  | CSS解析器  |
+| Javascript Interperter | javascript 解释器 |
+| DOM Tree    | DOM树 🌲🌲🌲🌲🌲 | 
+| Render Tree | 渲染树 🌲🌲🌲🌲🌲 | 
+| Layout of Render Tree | 渲染树 🌲布局 |
+
+####  解析HTML构造DOM树
+解析CSS会产生CSS规则树，解析javascript主要是通过DOM API和CSSOM API来操作DOM Tree和CSS
+
+#### 构造渲染树
+通过DOM树和CSS规则树来构造渲染树。不过，渲染树 并不等同于DOM树，因为一些像Header或display:none的东西就没必要放在渲染树中了。CSS规则树主要是为了完成匹配并把CSS规则附加到渲染树上的每个Element。也就是DOM结点
+
+#### 渲染树布局
+计算每个Element确切的显示位置，也就是layout和reflow的过程。
+
+#### 绘制渲染树
+通过调用操作系统Native GUI的API绘制将每一个节点绘制出来。
+
+
+
+
+ 
 ##  Chrome 架构
 
 * Browser:控制程序的“chrome”部分，包括地 址栏，书签，后退和前进按钮。还处理Web浏 览器的不可见的，和特权部分，例如网络请求 和文件访问。
@@ -72,6 +101,31 @@
 
 <img src="/chrome-framework.png">
 
+### Chrome 渲染器进程
+
+- 渲染器进程负责选项卡内发生的所有事情。 在 渲染器进程中，主线程处理你为用户编写的大 部分代码。
+- 如果你使用了web worker 或 service worker， 有时JavaScript代码的一部分将由工作线程处 理。 排版和栅格线程也在渲染器进程内运行， 以便高效、流畅地呈现页面。
+
+### Chrome 渲染过程
+
+#### 解析部分
+- 构建DOM
+- 子资源加载
+  - 注意javascript 可以阻止解析
+- 提示浏览器如何加载资源
+- 样式表计算
+- 布局
+- 绘制
+#### 合成部分
+把文档的结构、元素的样式、几何形状和绘制顺序转换为屏幕上的像素称为光栅化。
+合成是一种将页面的各个部分分层，分别栅格化，并在一个被称为合成器线程的独立线程中合成为页面的技术。
+
+#### GPU渲染
+一旦创建了层树并确定了绘制顺序，主线程就会将该信息提交给`合成器线程` 合成器线程然后栅格化每个图层。一个图层可能像页面的整个长度一样大，因此合成器线程会将它们分成图块，并将每个图块发送到光栅线程。栅格线程栅格化每一个tile并将它们存储 在GPU内存中。
+
+通过IPC将合成器帧提交给浏览器进程。这时可以从UI线程添加另一个合成器帧以用于浏览器UI更改，或者从其他渲染器进程添加扩充数据。这些合成器帧被发送到GPU用来在屏幕上显示。如果发 生滚动事件，合成器线程会创建另一个合成器帧并发送到GPU。
+
+合成的好处是它可以在不涉及主线程的情况下完成。 合成线程不需要等待样式计算或 JavaScript 执行。这就是合成动画是平滑性能的最佳选择的原因。如果需要再次计算布局或绘图，则必须涉及主线程。
 
 ## 初探Webkit
 

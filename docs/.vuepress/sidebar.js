@@ -21,7 +21,9 @@ const blog = [
     collapsable: false,
     children: [
       'engineering',
-      'engineering-sonarqube'
+      'engineering-sonarqube',
+      'engineering-jenkins',
+      'engineering-nexus'
     ]
   },
   {

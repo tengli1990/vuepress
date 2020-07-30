@@ -1,3 +1,3 @@
-# sonarQube搭建
+# sonarQube 搭建
 
 ![img](/all.png)

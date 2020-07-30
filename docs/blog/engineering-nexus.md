@@ -1,3 +1,3 @@
-# sonarQube搭建
+# Nexus 私服
 
 ![img](/all.png)

@@ -21,6 +21,8 @@
 - 小字为先
 
 ### 雅虎军规践行
+<YahooRules></YahooRules>
+
 
 ### 缓存的优先级
 
