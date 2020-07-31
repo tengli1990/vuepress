@@ -1,17 +1,8 @@
 <template>
   <div class="daily-index">
-      <div @click="onClick('javascript')">
-        javascript
-      </div>
-      <div @click="onClick('css')">
-        Css
-      </div>
-      <div @click="onClick('vue')">
-        Vue
-      </div>
-      <div @click="onClick('engineering')">
-        工程化
-      </div>
+    <div v-for="(type, index) in typeList" :key="index" @click="onClick(type.key)">
+      {{type.name}}
+    </div>
   </div>
 </template>
 
@@ -20,7 +11,29 @@
     name:'blog-index',
     data(){
       return {
-        title:'daily-index name'
+        title:'daily-index name',
+        typeList:[
+          {
+            key:'javascript',
+            name:'Javascript'
+          },
+          {
+            key:'html',
+            name:'HTML'
+          },
+          {
+            key:'css',
+            name:'CSS'
+          },
+          {
+            key:'vue',
+            name:'Vue'
+          },
+          {
+            key:'engineering',
+            name:'工程化'
+          }
+        ]
       }
     },
     methods:{

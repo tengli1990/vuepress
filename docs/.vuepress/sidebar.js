@@ -38,7 +38,16 @@ const blog = [
   },
 ]
 
-const basic = []
+const basic = [{
+  title: 'Javascript',
+  collapsable: false,
+  children: [
+    {
+      title:'基础',
+      path:'/basic/js-write'
+    }
+  ]
+}]
 
 //daily 
 const daily = [
@@ -49,6 +58,10 @@ const daily = [
   {
     title: 'css',
     path: '/daily/css'
+  },
+  {
+    title: 'html',
+    path: '/daily/html'
   },
   {
     title: 'vue',

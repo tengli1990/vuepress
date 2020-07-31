@@ -97,14 +97,71 @@ HTTP/2对同一 域名下所有请求都是基于流，也就是说同一域名�
 `CSR` `FMP` `SSR` `TTI`
 
 ### 你必须知道的概念
+|     EN     |   ZN                  |
+|------------|------------------------|
+| TTFB       |  首字节时间              |  
+| FP         |  首次绘制                |     
+| FCP        |  首次有内容的绘制         |  
+| FMP        |  首次有意义的绘制         |
+| Isomorphic Javascript | 同构化       |
+| SSR&&CSR   |  服务端渲染和客户端渲染    |
+| Long tasks |  超过50ms的任务          | 
+| TTI        |  可交互时间              |
 
-![你必须知道的概念](/performance-h5-02.jpg)
+|     <div style="width:40px;">缩写</div>    |     <div style="width:180px">全称</div>       |       描述        |
+|------------|----------------------------------------|-------------------|
+| LCP        |  最大内容绘制  <br> Largest Contentful Paint |  用于记录视窗内最大的元素绘制时间，该时间会随着页面渲染变化而变化，因为页面中的最大元素在渲染过程中可能发生改变，另外该指标会在用户第一次交互后停止记录 |
+| FID        |  首次输入延迟 <br>First Input Delay          |  记录在FCP 到 TTI之间用户首次与页面`交互时响应的延迟 `  |
+| TBT        |  总阻塞时间  <br> Total Blocking Time       | 记录在 FCP 到 TTI 之间所有长任务的`阻塞时间总和`
+| CLS        |  累计布局偏移 <br> Cumulative Layout Shift   |  记录页面上非预期的位移波动，使用按钮动态添加了某个元素，导致页面上其他位置的代码发生了偏移，
+
+::: warning 核心的任务指标
+ `LCP`代表了页面的速度指标，`LCP`能体现的东西更多一些，一是指标时时更新，数据更精确，二是代表着页面最大元素的渲染时间，最大元素的快速载入能让用户感觉性能还挺好。  
+
+ `FID` 代表页面的交互体验指标，交互响应的快会让用户觉得网页流畅。  
+
+ `CLS` 代表了页面的稳定指标，尤其在手机上这个指标更为重要，因为手机屏幕小，`CLS` 值大的话会让用户觉得页面体验做的很差。
+:::
 
 #### 2017-05 Google: User-centric Performance Metrics
 
 ![你必须知道的概念](/performance-h5-03.jpg)
 
-![你必须知道的概念](/performance-h5-04.jpg)
+#### 使用PerformanceObserver检测FP、FCP
+
+``` html
+<body>
+  <div id="app">
+    性能检测之FP、FCP
+  </div>
+  <script>
+   const observer = new PerformanceObserver(function(list){
+     for(let o of list.getEntries()){
+       console.log(o.name)
+       console.log(o.startTime)
+       console.log(o.duration)
+     }
+   })
+   observer.observe({entryTypes:['paint']})
+  </script>
+
+</body>
+```
+
+以上代码的结果为
+``` text
+first-paint
+76.32999999987078
+0
+first-contentful-paint
+76.32999999987078
+0
+```
+::: warning 注意
+当页面显示完全空白的时，不会触发FP和FCP  
+当页面内容完全空白，但是存在有背景颜色元素显示时，会触发FP  
+页面中只要存在显示的内容，会触发FP和FCP
+:::
 
 #### 为什么会出现白屏？
 
@@ -120,7 +177,7 @@ HTTP/2对同一 域名下所有请求都是基于流，也就是说同一域名�
   - 基本的DOM
   - 基本的CSS
 
-#### FP -> 仅有一个div根结点。
+<!-- #### FP -> 仅有一个div根结点。
 
 ``` html {2}
 <body>
@@ -167,7 +224,7 @@ HTTP/2对同一 域名下所有请求都是基于流，也就是说同一域名�
     <div class="footer">xxxxx</div>
   </div>
 </body>
-```
+``` -->
 
 ### 关于vue的执行
 
@@ -185,3 +242,9 @@ HTTP/2对同一 域名下所有请求都是基于流，也就是说同一域名�
 ### 总结
 
 ![总结](/performance-h5-06.png)
+
+## 相关连接
+[LCP（Largest Contentful Paint）-最大内容渲染](https://web.dev/lcp/)  
+[FID（First Input Delay）-首次输入延迟](https://web.dev/fid/ )  
+[TBT（Total Blocking Time）-总阻塞时间](https://web.dev/tbt/)  
+[CLS（Cumulative Layout Shift）-累计布局偏移](https://web.dev/cls/)  
