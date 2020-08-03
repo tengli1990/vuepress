@@ -43,7 +43,7 @@ const basic = [{
   collapsable: false,
   children: [
     {
-      title:'基础',
+      title:'手写部分',
       path:'/basic/js-write'
     }
   ]

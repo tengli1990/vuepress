@@ -22,7 +22,30 @@ function createNew(Con,...args){
 }
 ```
 
-<!-- ## 手写一个instanceof -->
+## 手写一个instanceof
+`1` 查找左侧对象的链`__proto__` 是否与右侧的原型相等，如果相等则返回 `true`
+`2` 如果不等一直向上查找，直到找到null，则返回 `false`
+``` javascript 
+function myInstanceof(l,r){
+  var L = l.__proto__
+  var R = r.prototype
+  while(true){
+    if(L === R){
+      return true
+    }
+    if(L === null){
+      return false
+    }
+    L = L.__proto__
+  }
+}
+```
+
+<!-- ## 手写 map 和 reduce
+
+``` javascript 
+
+``` -->
 
 
 
