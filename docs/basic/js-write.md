@@ -23,7 +23,7 @@ function createNew(Con,...args){
 ```
 
 ## 手写一个instanceof
-`1` 查找左侧对象的链`__proto__` 是否与右侧的原型相等，如果相等则返回 `true`
+`1` 查找左侧对象的链`__proto__` 是否与右侧的原型相等，如果相等则返回 `true`  
 `2` 如果不等一直向上查找，直到找到null，则返回 `false`
 ``` javascript 
 function myInstanceof(l,r){
@@ -41,11 +41,32 @@ function myInstanceof(l,r){
 }
 ```
 
-<!-- ## 手写 map 和 reduce
+## 手写 map 和 reduce
 
 ``` javascript 
+// map 
+Array.prototype.myMap = function(fn,context){
+  var len = this.length
+  var i = 0;
+  var ret = []
+  for(;i<len;i++){
+    ret.push(fn.call(context, this[i], i, this))
+  }
+  return ret
+}
 
-``` -->
+// reduce function
+Array.prototype.myReduce = function(fn, initValue){
+  var len = this.length
+  var i = 0
+  var ret
+  for(;i<len;i++>){
+    ret = fn(ret || initValue, this[i],i, this)
+  }
+
+  return ret
+}
+```
 
 
 

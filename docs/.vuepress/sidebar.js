@@ -12,6 +12,7 @@ const blog = [
     children: [
       'network-http',
       'network-https',
+      'network-dns',
       'network-tcp',
       'network-safe',
     ]
@@ -45,6 +46,10 @@ const basic = [{
     {
       title:'手写部分',
       path:'/basic/js-write'
+    },
+    {
+      title:'设计模式',
+      path:'/basic/js-design-pattern'
     }
   ]
 }]
