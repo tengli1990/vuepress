@@ -52,6 +52,10 @@ const basic = [{
       path:'/basic/js-design-pattern'
     }
   ]
+},{
+  title: '算法',
+  collapsable: false,
+  children: ['algorithm-search','algorithm-sort']
 }]
 
 //daily 
