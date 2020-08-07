@@ -84,5 +84,15 @@ Array.prototype.myReduce = function(fn, initValue){
 
 ```
 
+## 手写实现Object.create原理
+
+``` Javascript
+function create(obj){
+  function F(){}
+  F.prototype = obj
+  return new F()
+}
+```
+
 
 
