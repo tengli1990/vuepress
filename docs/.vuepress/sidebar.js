@@ -37,8 +37,17 @@ const blog = [
       'performance-node'
     ]
   },
+  {
+    title: 'CSS',
+    collapsable: false,
+    children: [
+      'css-houdini',
+      'css-matrix',
+    ]
+  }
 ]
 
+// 编程基础
 const basic = [{
   title: 'Javascript',
   collapsable: false,
@@ -53,9 +62,21 @@ const basic = [{
     }
   ]
 },{
+  title: "CSS",
+  collapsable: false,
+  children: [
+    {
+      title:'手写部分',
+      path:'/basic/css-next'
+    }
+  ]
+},{
   title: '算法',
   collapsable: false,
-  children: ['algorithm-search','algorithm-sort']
+  children: [
+    'algorithm-search',
+    'algorithm-sort'
+  ]
 }]
 
 //daily 

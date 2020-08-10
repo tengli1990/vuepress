@@ -41,3 +41,10 @@ sidebarDepth: 1
   ```
 :::
 
+
+<!-- ## 02 webpack热更新的原理？
+
+:::details 查看答案
+
+::: -->
+

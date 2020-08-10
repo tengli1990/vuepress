@@ -19,7 +19,7 @@ module.exports = {
     postcss: [require('autoprefixer')],
     sass: { indentedSyntax: true },
     scss:scssFile,
-    sidebarDepth: 2, // 侧边栏显示1级
+    sidebarDepth: 1, // 侧边栏显示1级
     smoothScroll: true, // 启用页面滚动效果
     repo: 'https://github.com/tengli1990/vuepress',
     docsDir: 'docs',
