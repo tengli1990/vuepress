@@ -94,6 +94,16 @@ const books = [{
   ]
 }]
 
+// 实战
+
+const practice = [{
+  title: '技术相关',
+  collapsable: false,
+  children: [
+    'bff-simple',
+  ]
+}]
+
 
 
 

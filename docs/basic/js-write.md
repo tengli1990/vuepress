@@ -74,14 +74,43 @@ Array.prototype.myReduce = function(fn, initValue){
 **防抖函数**是指多次触发事件后，事件处理函数只执行一次，并且在触发操作结束时执行。
 
 ``` javascript
+function debounce(fn, delay, immediate){
+  var timer 
+  return function(){
+    var args = arguments
+    var context = this
 
+    timer && clearTimeout(timer)
+    if(immediate){
+      fn.apply(context, args)
+      immediate = false
+    }else{
+      timer = setTimeout(function(){
+        fn.apply(context, args)
+        timer = null
+      },delay)
+    }
+  }
+}
 ```
 
 ### 节流函数
 **节流函数**是指触发事件后，在一定时间间隔内无法连续调用，只有过了规定的时间间隔，才能进行下一次函数调用。
 
 ``` javascript
-
+function throttle(fn, delay){
+  var timer
+  return function(){
+    if(timer){
+      return 
+    }
+    var context = this;
+    timer = setTimeout(function(){
+      fn.apply(context, arguments)
+      timer = null
+    },delay)
+  }
+}
 ```
 
 ## 手写实现Object.create原理
@@ -93,6 +122,12 @@ function create(obj){
   return new F()
 }
 ```
+
+<!-- ## 手写一个 call 函数
+
+``` Javascript
+
+``` -->
 
 
 
