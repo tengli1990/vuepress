@@ -1,6 +1,6 @@
 import DailyIndex from './components/daily/index.vue'
-import YahooRules from './components/blog/performanceYahooRules.vue'
-
+import YahooRules from './components/blog/performance-yahoo-rules.vue'
+import TransformDemo from './components/blog/css-transform-demo.vue'
 // 使用异步函数也是可以的
 export default ({
   Vue, // VuePress 正在使用的 Vue 构造函数
@@ -11,5 +11,6 @@ export default ({
 }) => {
   Vue.component('DailyIndex',DailyIndex)
   Vue.component('YahooRules',YahooRules)
+  Vue.component('TransformDemo',TransformDemo)
   // ...做一些其他的应用级别的优化
 }

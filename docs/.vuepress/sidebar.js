@@ -18,6 +18,19 @@ const blog = [
     ]
   },
   {
+    title: 'CSS',
+    collapsable: false,
+    children: [
+      'css-houdini',
+      'css-matrix'
+    ]
+  },
+  {
+    title: '源码解析',
+    collapsable: false,
+    children: ['source-code-vue']
+  },
+  {
     title: '工程化',   // 必要的
     collapsable: false,
     children: [
@@ -35,14 +48,6 @@ const blog = [
       'performance-browser',
       'performance-h5',
       'performance-node'
-    ]
-  },
-  {
-    title: 'CSS',
-    collapsable: false,
-    children: [
-      'css-houdini',
-      'css-matrix',
     ]
   }
 ]

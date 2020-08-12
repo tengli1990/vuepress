@@ -32,6 +32,7 @@ const more = {
       text: '实战',
       items: [
         {text: 'BFF', link: '/practice/'},
+        {text: 'CSS Starry Sky', link: '/blog/css-houdini.html#css-画一片星空'},
       ]
     }
   ]

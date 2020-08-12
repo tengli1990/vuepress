@@ -8,12 +8,18 @@ CSS Houdini 旨在建立一系列的CSS API，让开发者能够介入浏览器�
 
 ## CSS Houdini API
 
-#### CSS Parsing API
+- CSS Parser API  
+- CSS Properties and Values API  
+- CSS Layout API  
+- CSS Paint API
+- Worklets
+
+### CSS Parser API
 还没有被写入规范，所以下面我要说的内容随时都会有变化，但是它的基本思想不会变：允许开发者自由扩展 CSS 词法分析器，引入新的结构（constructs），比如新的媒体规则、新的伪类、嵌套、@extends、@apply 等等。  
 
 只要新的词法分析器知道如何解析这些新结构，CSSOM 就不会直接忽略它们，而是把这些结构放到正确的地方。
 
-#### CSS属性/值 API
+### CSS Properties and Values API
 
 [CSS Properties and Values API](https://drafts.css-houdini.org/css-properties-values-api/) 的出现进一步推动了自定义属性，它还允许自定义属性添加不同的类型，大大增强了自定义属性的能力。  
 
@@ -32,7 +38,7 @@ body.night-theme {
 
 当 night-theme 类被加到 `<body> `元素上之后，页面所有有 --primary-theme-color 的元素属性值都会慢慢从 tomato 变成 darked。如果今天你想要在自己的页面上实现这个效果，那就需要费劲儿的一个个给元素添加过渡动画。
 
-#### CSS Layout API  
+### CSS Layout API  
 开发者可以通过 [CSS Layout API](https://drafts.css-houdini.org/css-layout-api/)实现自己的布局模块（layout module），这里的“布局模块”指的是display 的属性值。也就是说，这个 API 实现以后，开发者首次拥有了像 CSS 原生代码（比如 display:flex、display:table）那样的布局能力。
 
 让我们来看一个用例，在 [Masonry layout library](https://masonry.desandro.com/) 上大家可以看到开发者们是有多想实现各种各样的复杂布局，其中一些布局光靠 CSS 是不行的。虽然这些布局会让人耳目一新印象深刻，但是它们的页面性能往往都很差，在一些低端设备上性能问题犹为明显。
@@ -61,7 +67,7 @@ body {
   display: layout('masonry');
 }
 ```
-#### CSS Paint API
+### CSS Paint API
 CSS Paint API 和上面说到的 Layout API 非常相似。它提供了一个 registerPaint 方法，操作方式和 registerLayout 方法也很相似。当想要构建一个 CSS 图像的时候，开发者随时可以调用paint() 函数，也可以使用刚刚注册好的名字。
 
 下面这段代码展示时如何画一个有颜色的圆型：
@@ -96,7 +102,7 @@ registerPaint('circle',class {
 
 你将在页面上看到一个以蓝色圆形为背景的元素，它的类是 .bubble，这个圆形背景将始终占满 .bubble 元素。
 
-## Worklets 实战
+### Worklets 
 `registerLayout` 和 `registerPaint` 已经了解过了，估计现在你想知道 的是，这些代码得放在哪里呢?答案就是 worklet 脚本(工作流脚本文 件)。
 
 Worklets 的概念和 web worker 类似，它们允许你引入脚本文件并执行 特定的 JS 代码，这样的 JS 代码要满足两个条件:
@@ -122,9 +128,9 @@ registerPaing('xx', class{
 })
 ```
 
-## Typed OM Object
+### CSS Typed OM 
 
-Typed OM 的出现，给我们读取以及设定数值添加了一种新的方法，不同于 CSSOM 中原有的字符串值的表现形式，Typed OM 将 CSSOM 的数值以 map 的形式展现在元素的 attributeStyleMap 中，规则所对应的值则是更有使用价值的 JavaScript 对象。
+Typed OM 的出现，给我们读取以及设定数值添加了一种新的方法，不同于 CSSOM 中原有的字符串值的表现形式，Typed OM 将 CSSOM 的数值以 map 的形式展现在元素的 attributeStyleMap 中，规则所对应的值则是更有使用价值的 JavaScript对象。
 
 - 更少的 bug，正如前面所展示的操作，通过 TypedOM 进行操作减少此类型的问题；
 - 在数值对象上调用简单的算术运算方法，绝对单位之间还能方便得尽兴单位转换；
@@ -149,6 +155,86 @@ let pos = new CSSPositionValue(
   new CSSUnitValue(5, 'px'),
   new CSSUnitValue(10, 'px')
 )
+```
+
+## CSS 画一片星空
+
+使用CSS Paint API 画一片星空。
+
+1、创建starry-sky.html
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画一片星空</title>
+  <style>
+     body{
+       margin: 0;
+       font-size:24px;
+       background: #000;
+       color:#fff;
+     }
+
+     body:before{
+       content:'';
+       position: absolute;
+       left: 0;
+       top: 0;
+       width: 100%;
+       height: 100%;
+       --star-density:.8;
+       --star-opacity: 1;
+       background-image: paint(sky);
+     }
+  </style>
+</head>
+<body>
+  <script>
+    if(!window.CSS || !CSS.paintWorklet){
+      console.log('不支持 paintWorklet')
+    }else{
+      CSS.paintWorklet.addModule('starry-sky.js')
+    }
+  </script>
+</body>
+</html>
+```
+2、创建starry-sky.js
+``` javascript
+class starSky {
+  static get inputProperties(){
+    return ['--star-density','--star-opacity']
+  }
+
+  paint(ctx, geom, props){
+    console.log(ctx,geom,props)
+    const xMax = geom.width;
+    const yMax = geom.height;
+    // fillRect(x,y,width,height)
+    ctx.fillRect(0, 0, xMax, yMax);
+    // 获取css变量
+    let starDensity = props.get('--star-density').toString() || 1;
+    let starOpacity = props.get('--star-opacity').toString() || 1;
+    // 通过密度和可视区计算星星的数量
+    const stars = Math.round((xMax + yMax) * starDensity);
+    for(let i=0; i <= stars;i++){
+       const x = Math.floor(Math.random() * xMax + 1)
+       const y = Math.floor(Math.random() * yMax + 1)
+       const size = Math.floor(Math.random() * 2 + 1)
+       const opacityOne = Math.floor(Math.random()*9 + 1)
+       const opacityTwo = Math.floor(Math.random()*9 + 1)
+       const opacity = `.${(opacityOne + opacityTwo)*starOpacity}`
+       const hue = Math.floor(Math.random()*360+1)
+       // hlsa(Hue, Saturation, Lightness, Alpha)
+       ctx.fillStyle=`hsla(${hue}, 20%, 80%, ${opacity})`
+       ctx.fillRect(x, y ,size, size)
+    }
+  }
+}
+
+registerPaint('sky', starSky)
 ```
 
 ## 相关链接

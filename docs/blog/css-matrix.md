@@ -21,11 +21,11 @@
 
 ## CSS中矩阵的应用
 
-#### 2D&3D矩阵应用
+### 2D&3D矩阵应用
 
 前者是元素2D平面的移动变换(transform)，后者则是3D变换。2D变换矩阵为3*3, 如上 面矩阵示意图;3D变换则是4*4的矩阵。
 
-#### transform原理
+### transform原理
 
 skew：斜拉
 scale：缩放
@@ -38,4 +38,13 @@ translate：位移
 transform: matrix(a,b,c,d,e,f);
 ```
 通过 `transform-origin` 属性进行设置的时 候，矩阵相关计算也随之发生改变。实 际图形效果上就是，旋转拉伸的中心点 变了!
- 
+
+体验一下效果
+<TransformDemo/> 
+
+### 到底如何计算矩阵？
+
+transform: translate(30px, 30px); transform: matrix(1, 0, 0, 1, 30, 30); translate, rotate等方法都是需要单位
+的，而matrix方法e, f参数的单位可以省 略。
+
+
