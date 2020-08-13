@@ -28,7 +28,16 @@ const blog = [
   {
     title: '源码解析',
     collapsable: false,
-    children: ['source-code-vue']
+    children: [
+      'source-code-vue1'
+    ]
+  },
+  {
+    title: 'Webpack',
+    collapsable: false,
+    children:[
+      'webpack-plugins'
+    ]
   },
   {
     title: '工程化',   // 必要的
@@ -61,10 +70,10 @@ const basic = [{
       title:'手写部分',
       path:'/basic/js-write'
     },
-    {
-      title:'设计模式',
-      path:'/basic/js-design-pattern'
-    }
+    // {
+    //   title:'设计模式',
+    //   path:'/basic/js-design-pattern'
+    // }
   ]
 },{
   title: "CSS",
@@ -76,11 +85,17 @@ const basic = [{
     }
   ]
 },{
+  title: '设计模式',
+  collapsable: false,
+  children: [
+    'design-pattern-solid'
+  ]
+},{
   title: '算法',
   collapsable: false,
   children: [
-    'algorithm-search',
-    'algorithm-sort'
+    'algorithm-sort',
+    'algorithm-search'
   ]
 }]
 
@@ -107,7 +122,6 @@ const daily = [
     path: '/daily/engineering'
   }
 ]
-
 
 // 阅读
 const books = [{
