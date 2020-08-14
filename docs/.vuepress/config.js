@@ -3,7 +3,7 @@ const nav = require('./nav')
 const sidebar = require('./sidebar')
 
 module.exports = {
-  title: '学无止境',
+  title: 'Power',
   description: '',
   head: [ // 注入到当前页面的 HTML <head> 中的标签
     ['link', { rel: 'icon', href: '/logo.jpg' }], // 增加一个自定义的 favicon(网页标签的图标)

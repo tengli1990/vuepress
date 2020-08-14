@@ -35,7 +35,7 @@ const blog = [
   {
     title: 'Webpack',
     collapsable: false,
-    children:[
+    children: [
       'webpack-plugins'
     ]
   },
@@ -62,42 +62,46 @@ const blog = [
 ]
 
 // 编程基础
-const basic = [{
-  title: 'Javascript',
-  collapsable: false,
-  children: [
-    {
-      title:'手写部分',
-      path:'/basic/js-write'
-    },
-    // {
-    //   title:'设计模式',
-    //   path:'/basic/js-design-pattern'
-    // }
-  ]
-},{
-  title: "CSS",
-  collapsable: false,
-  children: [
-    {
-      title:'手写部分',
-      path:'/basic/css-next'
-    }
-  ]
-},{
-  title: '设计模式',
-  collapsable: false,
-  children: [
-    'design-pattern-solid'
-  ]
-},{
-  title: '算法',
-  collapsable: false,
-  children: [
-    'algorithm-sort',
-    'algorithm-search'
-  ]
-}]
+const basic = [
+  {
+    title: 'TypeScript',
+    collapsable: false,
+    children: [
+      'ts-tsconfig'
+    ]
+  }, {
+    title: 'JavaScript',
+    collapsable: false,
+    children: [
+      {
+        title: '手写部分',
+        path: '/basic/js-write'
+      }
+    ]
+  }, {
+    title: "CSS",
+    collapsable: false,
+    children: [
+      {
+        title: '手写部分',
+        path: '/basic/css-next'
+      }
+    ]
+  }, {
+    title: '设计模式',
+    collapsable: false,
+    children: [
+      'design-pattern-solid'
+    ]
+  }, {
+    title: '算法',
+    collapsable: false,
+    children: [
+      'algorithm-sort',
+      'algorithm-search'
+    ]
+  }
+]
 
 //daily 
 const daily = [

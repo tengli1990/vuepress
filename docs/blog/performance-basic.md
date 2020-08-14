@@ -25,13 +25,6 @@ loadEventStart -> loadEventEnd
 优化点位于
 DNS、TCP、Response、Processing、Onload
 
-## DNS详解
-
-域名资源记录 域名 对应 ip
-
-缓存算法
-什么样的数据才能入缓存呢？谁决定的？ 算法决定的
-算法通过数据命中率
 
 
 ## 现代浏览器渲染过程
