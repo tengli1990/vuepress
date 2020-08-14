@@ -29,7 +29,7 @@ const blog = [
     title: '源码解析',
     collapsable: false,
     children: [
-      'source-code-vue1'
+      'sc-vue-1'
     ]
   },
   {
