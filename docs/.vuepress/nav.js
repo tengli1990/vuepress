@@ -25,7 +25,7 @@ const more = {
       text: '学习相关',
       items: [
         {text: '阅读', link: '/books/'},
-        {text: '工具函数', link: '/tools/'}
+        {text: '工具', link: '/tools/'}
       ]
     },
     {

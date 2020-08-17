@@ -26,17 +26,19 @@ const blog = [
     ]
   },
   {
-    title: '源码解析',
+    title: 'Framework',
     collapsable: false,
     children: [
-      'sc-vue-1'
+      'sc-vue2',
+      'sc-react'
     ]
   },
   {
     title: 'Webpack',
     collapsable: false,
     children: [
-      'webpack-plugins'
+      'webpack-plugins',
+      'webpack-principle'
     ]
   },
   {
@@ -60,7 +62,6 @@ const blog = [
     ]
   }
 ]
-
 // 编程基础
 const basic = [
   {
@@ -98,11 +99,11 @@ const basic = [
     collapsable: false,
     children: [
       'algorithm-sort',
-      'algorithm-search'
+      'algorithm-search',
+      'algorithm-tree'
     ]
   }
 ]
-
 //daily 
 const daily = [
   {
@@ -126,7 +127,6 @@ const daily = [
     path: '/daily/engineering'
   }
 ]
-
 // 阅读
 const books = [{
   title: '技术相关',
@@ -138,8 +138,18 @@ const books = [{
   ]
 }]
 
-// 实战
+// 工具
+const tools = [
+  {
+    title:'文件解压/压缩',
+    collapsable: false,
+    children: [
+      "compress-rar"
+    ]
+  }
+]
 
+// 实战
 const practice = [{
   title: '技术相关',
   collapsable: false,
@@ -149,13 +159,12 @@ const practice = [{
 }]
 
 
-
-
 const sidebar = {
   '/blog/': blog,
   '/basic/': basic,
   '/daily/': daily,
-  '/books/': books
+  '/books/': books,
+  '/tools/': tools
 }
 
 module.exports = sidebar

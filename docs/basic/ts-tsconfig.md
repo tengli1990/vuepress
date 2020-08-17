@@ -29,7 +29,7 @@ tsconfig.json 所包含的属性并不多，只有 7 个，ms 官方也给出了
     "noEmitOnError": true,                     // 发生错误时不输出文件
     "noEmitHelpers": true,                     // 不生成helper 函数，需要额外安装ts-helpers
     "importHelpers": true,                     // 通过tslib 引入 helper 函数，文件必须是模块
-    unoEmitOnErrorM: true,                     // 发生错误时不输出文件
+    "unoEmitOnErrorM": true,                     // 发生错误时不输出文件
     "noEmitHelpers": true,                     // 不生成 helper 函数，需额外安装 ts-helpers
     "importHelpers": true,                     // 通过tslib引入helper函数，文件必须是模块
     "downlevellteration" : true,               // 降级遍历器的实现（es3/5)
@@ -51,7 +51,7 @@ tsconfig.json 所包含的属性并不多，只有 7 个，ms 官方也给出了
     "baseUrl": "./",                           // 解析非相对模块的基地址
     "paths": {
        "jquery": ["node-modules/jquery/dist/jquery.slim.min.js"]
-     }
+    },
     "rootDirs": ["src", "out"],                // 将多个目录放在一个虚拟目录下，用于运行时
     "listEmittedFiles": true,                  // 打印输出的文件
     "listFiles": true,                         // 打印编译的文件（包括引用的声明文件）
