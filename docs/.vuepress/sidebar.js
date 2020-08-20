@@ -38,7 +38,8 @@ const blog = [
     collapsable: false,
     children: [
       'webpack-plugins',
-      'webpack-principle'
+      'webpack-principle',
+      'webpack-loader'
     ]
   },
   {

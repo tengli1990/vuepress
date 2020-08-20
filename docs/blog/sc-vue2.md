@@ -39,6 +39,9 @@
 
 ## 双向数据绑定原理
 
+执行`vm=new Vue()`函数后，Observer会监听vm对象。
+当页面中执行获取vue实例下的数据时会触发Observer.get方法，初始化状态get没有值，那么就会把当前模板对应的Watcher添加到依赖收集，当该模板下的变量被赋值的时候 通过Observer.set方法通过依赖告诉对应的Watcher去更新
+
 - Object.defineProperty
 - Observer
 - Watcher

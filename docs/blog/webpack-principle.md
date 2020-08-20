@@ -5,6 +5,13 @@
 - plugins
 - Webpack 运行流程
 
+::: warning 文件指纹区别 & watch
+Hash:和整个项目目的相关，只要项目文件有修改，整个项目构建的hash值就会更改。
+Chunkhash: 和 webpack 打包的chunk有关，不同的entry 会生成不同的chunkhash值
+Contenthash：根据文件内容定义hash，文件内容不变，则contenthash不变
+
+watch轮训判断文件的最后编辑时间是否变化，某个文件发生变化并不会立刻告诉监听者，而是先缓存起来，等aggregateTimeout。
+:::
 
 ## 走进webpack入口文件-Entry
 
@@ -129,7 +136,7 @@ webpack 利用了 [tapable](https://github.com/webpack/tapable) 这个库来协�
 #### 1.什么是Tapable?
 webpack核心使用Tapable 来实现插件(plugins)的binding和applying.Tapable是一个用于事件发布订阅执行的插件架构。Tapable就是webpack用来创建钩子的库。
 
-#### 2.打开webpack->package.json->main -> webpac.js 一起分析~
+#### 2.打开webpack->package.json->main -> webpack.js 一起分析~
 
 
 #### 3.创建流程
