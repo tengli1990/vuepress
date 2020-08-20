@@ -29,8 +29,10 @@ const blog = [
     title: 'Framework',
     collapsable: false,
     children: [
-      'sc-vue2',
-      'sc-react'
+      'framework-vue2.x',
+      'framework-react16.13.0',
+      'framework-ioc',
+      'framework-ioc.di.aop'
     ]
   },
   {
