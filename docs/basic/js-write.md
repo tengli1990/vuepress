@@ -123,9 +123,24 @@ function create(obj){
 }
 ```
 
-<!-- ## 手写一个 call 函数
+## 手写一个 call 函数
 
 ``` Javascript
+Function.prototype.myCall = function(context,...args){
+  //  绑定的对象
+  var context = context || window
+  //  防止冲突
+  var callFn = Symbol('callFn')
+  context[callFn] = this 
+  var result = context[callFn](...args)
+  delete context[callFn]
+  return result
+}
+```
+
+<!-- ## 手写一个 bind 函数
+
+``` javascript   
 
 ``` -->
 
