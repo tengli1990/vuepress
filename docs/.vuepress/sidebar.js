@@ -71,16 +71,15 @@ const basic = [
     title: 'TypeScript',
     collapsable: false,
     children: [
-      'ts-tsconfig'
+      'ts-tsconfig',
+      'ts-types'
     ]
   }, {
     title: 'JavaScript',
     collapsable: false,
     children: [
-      {
-        title: '手写部分',
-        path: '/basic/js-write'
-      }
+      'js-write',
+      'js-types'
     ]
   }, {
     title: "CSS",

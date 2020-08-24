@@ -2,6 +2,8 @@
 sidebarDepth: 1
 ---
 
+# 手写部分
+
 ## 手写一个new 操作符
 
 ### 步骤
@@ -139,9 +141,9 @@ Function.prototype.myCall = function(context,...args){
 ```
 
 ## 手写一个 bind 函数
-`1` 调用者必须是一个函数
-`2` bind()的第一个参数将作为他运行时的this，
-`3` 一个绑定函数也能使用new操作符创建对象，这种行为就像把原函数当作构造器。
+`1` 调用者必须是一个函数  
+`2` bind()的第一个参数将作为他运行时的this，  
+`3` 一个绑定函数也能使用new操作符创建对象，这种行为就像把原函数当作构造器。  
 ``` javascript   
 Function.prototype.myBind = function(target){
   if(typeof this !== 'function'){
@@ -163,10 +165,53 @@ Function.prototype.myBind = function(target){
   if(this.prototype){
     fNOP.prototype = this.prototype
   }
-  
+
   fBound.prototype = new fNOP()
   return fBound
+}
+```
 
+## 手写一个对象深拷贝
+
+`1` 如果是非引用类型可以直接返回  
+`2` 使用WeakMap存储已经clone的对象，防止循环引用
+
+``` js
+function deepClone(obj,cacheObj = new WeakMap()){
+
+  function isObject(obj){
+    return Object.prototype.toString.call(obj) === "[object Object]"
+  }
+  function isArray(obj){
+    return Array.isArray(obj)
+  }
+
+  // 非引用类型直接返回
+  if(!isObject(obj) && !isArray(obj)){
+    return obj
+  }
+
+  var result ;
+  if(isObject(obj)){
+    result = {...obj}
+  }
+  if(isArray(obj)){
+    result = [...obj] 
+  }
+
+  // 防止循环引用
+  if(cacheObj.has(obj)){
+    return cacheObj.get(obj)
+  }
+  cacheObj.set(obj,result)
+  for(var key in obj){
+    if(isObject(obj[key])){
+       result[key]= deepClone(obj[key],cacheObj)
+    }else{
+      result[key] = obj[key]
+    }
+  }
+  return result
 }
 ```
 
