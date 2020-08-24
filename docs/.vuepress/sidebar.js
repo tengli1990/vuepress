@@ -154,9 +154,10 @@ const tools = [
 
 // 实战
 const practice = [{
-  title: '技术相关',
+  title: '实战项目',
   collapsable: false,
   children: [
+    'vue-ssr',
     'bff-simple',
   ]
 }]
@@ -167,7 +168,8 @@ const sidebar = {
   '/basic/': basic,
   '/daily/': daily,
   '/books/': books,
-  '/tools/': tools
+  '/tools/': tools,
+  '/practice/':practice
 }
 
 module.exports = sidebar

@@ -138,11 +138,37 @@ Function.prototype.myCall = function(context,...args){
 }
 ```
 
-<!-- ## 手写一个 bind 函数
-
+## 手写一个 bind 函数
+`1` 调用者必须是一个函数
+`2` bind()的第一个参数将作为他运行时的this，
+`3` 一个绑定函数也能使用new操作符创建对象，这种行为就像把原函数当作构造器。
 ``` javascript   
+Function.prototype.myBind = function(target){
+  if(typeof this !== 'function'){
+    throw new TypeError('调用者必须是一个function')
+  }
 
-``` -->
+  var  aArgs = Array.prototype.slice.call(arguments,1),
+  fToBound = this,
+  fNOP = function(){},
+  fBound = function(){
+    return fToBound.apply(
+      (this instanceof fNOP ? this : target),
+      aArgs.concat(
+        Array.prototype.slice.call(arguments)
+      )
+    )
+  }
+
+  if(this.prototype){
+    fNOP.prototype = this.prototype
+  }
+  
+  fBound.prototype = new fNOP()
+  return fBound
+
+}
+```
 
 
 
