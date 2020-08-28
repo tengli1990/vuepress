@@ -31,6 +31,7 @@ const blog = [
     children: [
       'framework-vue2.x',
       'framework-react16.13.0',
+      'framework-redux',
       'framework-ioc',
       'framework-ioc.di.aop'
     ]
@@ -72,7 +73,15 @@ const basic = [
     collapsable: false,
     children: [
       'ts-tsconfig',
-      'ts-types'
+      {
+        title: '基础总结',
+        path:'/basic/ts-basic-all',
+        collapsable: false,
+        children: [
+          'ts-types',
+          'ts-declare',
+        ]
+      }
     ]
   }, {
     title: 'JavaScript',
