@@ -27,10 +27,10 @@ redux 是[函数式编程](/blog/fp)的经典实现。
 │   └── info.js
 └── redux
     ├── applyMiddleware.js            // 处理合并中间件
-    ├── bindActionCreators.js         
-    ├── compose.js
-    ├── createStore.js
-    └── index.js
+    ├── bindActionCreators.js         // 实现简化操作，将单个或多个ActionCreator转化为dispatch(action)的函数集合形式
+    ├── compose.js                    // 执行所有中间件
+    ├── createStore.js                // 创建store 容器，存储state
+    └── index.js                      // 模块导出文件
 ```
 
 ## 实现
