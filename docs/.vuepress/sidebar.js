@@ -32,6 +32,7 @@ const blog = [
       'framework-vue2.x',
       'framework-react16.13.0',
       'framework-redux',
+      'framework-vuex',
       'framework-ioc',
       'framework-ioc.di.aop'
     ]

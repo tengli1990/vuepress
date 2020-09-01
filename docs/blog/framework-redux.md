@@ -1,410 +1,129 @@
 # Redux 实现
 
-redux 是[函数式编程](/blog/fp)的经典实现。  
-首先，函数式编程得有一个container容器，用map接收一个变形关系作用于每个value，因为有很多菡子并且函数式编程讲究纯，所以需要把所有的东西进行包裹，通过IO菡子来解决异步和脏操作的问题。  
-那么在redux中，store就是我们的容器，使用reducer接收action更新currentState，middleware中间件就是IO菡子，可以用来处理异步和脏操作。
+> redux 是[函数式编程](/blog/fp)的经典实现。  
+首先，函数式编程得有一个container容器，用map接收一个变形关系作用于每个value，因为有很多菡子并且函数式编程讲究纯，所以需要把所有的东西进行包裹，通过IO Functor来解决异步和脏操作的问题。  
+那么在redux中，store就是我们的容器，使用reducer接收action更新state，middleware中间件就是IO Functor，可以用来处理异步和脏操作。  
 
-## 概念
-- Action
-- Reducer
-- Store
+1、范畴论将世界抽象为对象和对象之间的联系，Redux将所有事件抽象为action。
 
-**Action** 表示应用中的各类动作或操作，不同的操作会改变应用相应的state状态，说白了就是一个带type属性的对象。  
-**Reducers** 指定了应用状态的变化如何响应 actions 并发送到 store 的，记住 actions 只是描述了有事情发生了这一事实，并没有描述应用如何更新 state。  
-**Store** 则是我们储存state的地方。我们通过redux当中的createStore方法来创建一个store。  
+2、函数式编程中，Container 中含有 value 和 map 两个属性，而修改 value 的方法只有 map，在操作完 value 后将新
+值放回 Container 中。
 
-
-## 目录
-```
-├── actions                           // 操作 
-├── middlewares                       // 中间件
-│   ├── exceptiontimeMiddleware.js
-│   ├── loggerMiddleware.js
-│   └── timeMiddleware.js
-├── reducers                          // 函数式编程中我们称之为Fold折叠 ，接收旧的 state 和 action，返回新的 state。
-│   ├── combineReducers.js            // 处理合并reducer
-│   ├── counter.js                    
-│   └── info.js
-└── redux
-    ├── applyMiddleware.js            // 处理合并中间件
-    ├── bindActionCreators.js         // 实现简化操作，将单个或多个ActionCreator转化为dispatch(action)的函数集合形式
-    ├── compose.js                    // 执行所有中间件
-    ├── createStore.js                // 创建store 容器，存储state
-    └── index.js                      // 模块导出文件
-```
-
-## 实现
-### 1、简版
-
-- createStore
-- combineReducers
-
-#### redux/createStore.js
-::: details 查看
 ``` js
-export default function createStore(reducer,initState){
-  // 初始化状态
-  let state = initState
-  
-  // 创建电话本，存储订阅者
-  let listeners = []
+// 如何操作或修改 value 由 f 给出。 
+store -> container
+currentState -> __value
+action -> f
+currentReducer -> map
+middleware -> IO functor (解决异步操作的各种问题。)
+```
 
-  // 获取状态接口
-  function getState(){
-    return state
-  }
+3、store 是一个容器含有 state 和 reducer  
+reducer是一个纯函数，它可以查看之前的状态，执行一个action并且返回一个新的状态  
 
-  //实现订阅方法 
-  function subscribe(listener){
-    listeners.push(listener)
-    // 这里我们返回一个取消订阅的方法
-    return function unsubscribe(){
-      const index = listeners.indexOf(listener)
-      listeners.splice(index, 1)
+这从 store 的创建语句 enhancer(createStore)(reducer, preloadedState) 可以很明显的得出。而修改 store 中的 currentState 的唯一方法是使用 currentReducer，并且 currentState 在修改完后将新值 依然存放在 store 内。  
+
+
+## 如何修改 currentState 是根据用户操作 action
+1. applyMiddlewar.js 使用自定义的 middleware 来扩展 Redux  
+2. bindActionCreators.js 把 action creators 转成拥有同名 keys 的对象,使用时可以直接调用  
+3. combineReducers.js 一个比较大的应用，需要对 reducer 函数 进行拆分，拆分后的每一块独立负责管理 state 的一部分  
+4. compose.js 从右到左来组合多个函数，函数编程中常用到  
+5. createStore.js 创建一个 Redux Store 来放所有的state  
+6. utils/warnimng.js 控制台输出一个警告，我们可以不用看   
+7. React可以看做纯函数 固定的state输入输出组件  
+
+## Redux Store的基础
+
+store 是一个单一对象
+ - 管理应用的 state
+ - 通过 store.getState() 可以获取 state
+ - 通过 store.dispatch(action) 来触发 state 更新
+ - 通过 store.subscribe(listener) 来注册 state 变化监听器 通过 createStore(reducer, [initialState]) 创建
+
+ 相关链接：[js版Redux](https://github.com/tengli1990/my-redux)
+
+ ## React-Redux的原理
+
+ Provider 其实就只是一个外层容器，它的作用就是通过配合 connect 来达到跨层级传递数据。使用时 只需将Provider定义为整个项目最外层的组件，并设置好store。那么整个项目都可以直接获取这个 store。它的原理其实是通过React中的Context来实现的。它大致的核心代码如下:
+
+ ``` js
+import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
+
+export default class Provider extends Component {
+  getChildContext(){
+  return { 
+      store: this.props.state 
     }
   }
 
-  // 派发动作
-  // 每执行一次dspatch，所有的reducer都会执行
-  function dispatch(action){
-    // reducer 接收一个action动作 并且返回新的state
-    state = reducer(state,action)
-    // 状态改变之后通知所有订阅者
-    for(let listener of listeners){
-      listener()
+  constructor(){
+    super()
+    this.state = {}
+  }
+
+  render(){
+    return this.props.children
+  }
+}
+
+Provider.childContextTypes = {
+  store:PropTypes.object
+}
+ ```
+
+connect 的作用是连接React组件与 Redux store，它包在我们的容器组件的外一层，它接收上面 Provider 提供的 store 里面的 state 和 dispatch，传给一个构造函数，返回一个对象，以属性形式传给 我们的容器组件。  
+
+它共有四个参数mapStateToProps, mapDispatchToProps, mergeProps以及options。
+
+mapStateToprops 的作用是将store里的state 数据源 绑定到指定组件的props中  
+mapDispatchProps 的作用是将store里的action （操作数据的方法）绑定到指定组件的props中
+另外两个方法一般情况下用不到，这里就不做介绍了。
+
+那么connect 是怎么将React组件于Redux store连接起来的呢？ 其主要逻辑可以总结成以下代码：
+``` js
+
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
+const connect = (mapStateToprops, mapDispatchProps)=> ( WrappedComponent =>{
+  class Connect extends Component{
+    constructor(){
+       super()
+       this.state = {}
     }
-    return action
-  }
+    componentWillMount(){
+      this.unSubscribe = this.context.store.subscribe(()=>{
+        this.setState(mapStateToProps(this.context.store.getState()))
+      })
+    }
 
-  // 替换reducer
-  function replaceReducer(newReducer){
-    reducer = newReducer
-    // 当调用reducer发生了变化时，需要重新初始化store的数据结构及默认数据
-    dispath({type: Symbol()})
-  }
+    componentWillUnmonut(){
+      this.unSubscribe()
+    }
 
-  // 初始化整个store的数据结构，同时获取reducer中的默认数据
-  dispath({type: Symbol()})
-
-  return {
-    getState,
-    subscribe,
-    dispatch
-  }
-}
-
-```
-:::
-
-#### redux/index.js 
-::: details 查看  
-``` js   
-import createStore from 'redux/index.js'
-import combineReducers from '../reducers/combineReducers.js'
-
-export default {
-  createStore,
-  combineReducers
-}
-```
-:::
-
-#### reducers/combineReducers.js
-::: details 查看  
-``` js
-export default function combineReducers(reducers){
-  return (state={}, action)=>{
-    return Object.keys(reducers).reduce((nextState,key)=>{
-       // reducers: 单个reducer
-       // state[key]：上一次的状态
-       // nextState：更新之后的 
-       nextState[key] = reducers[key](state[key],action)
-       return nextState
-    },{})
-  }
-}
-```
-:::
-
-#### reducers/
-::: details 查看  
-infoReducer.js
-``` js
-const initState = {
-  name:''
-}
-export default function infoReducer(state,action){
-  if(!state){
-    state = initState
-  }
-  // 接收一个state 和 action 并返回新的state
-  switch(action.type){
-    case "SET_NAME":
-      return {
-        ...state,
-        name:action.name
-      }
-    default :
-      return state
-  }
-}
-```
-
-counterReducer.js
-``` js
-const initState = {
-  count:0,
-  name:''
-}
-export default function infoReducer(state,action){
-  if(!state){
-    state = initState
-  }
-  // 接收一个state 和 action 并返回新的state
-  switch(action.type){
-    case "INCREMENT":
-      return {
-        ...state,
-        count:++state.count
-      }
-    case "DECREMENT":
-      return {
-        ...state,
-        count:--state.count 
-      }
-    default :
-      return state
-  }
-}
-```
-:::
-
-一个简版的redux 就完成了。
-
-#### 在index.html中调用方法
-
-``` html 
-<body>
-  <script type="module">
-    import { createStore, combineReducers} from  './redux/index.js';
-    import infoReducer from './reducers/infoReducer.js'
-    import counterReducer from './reducers/counterReducer.js'
-    const reducer = combineReducers({
-      info:infoReducer,
-      counter:counterReducer
-    })
-    const store = createStore(reducer)
-
-    store.subscribe(()=>{
-      //  订阅：当状态改变的时候，则会执行当前函数
-      console.log('currentState',store.getState())
-    })
-
-    // 手动执行dispatch 改变数据
-    store.dispatch({
-      type: 'INCREMENT'
-    })
-    store.dispatch({
-      type: 'SET_NAME',
-      name:'Lili'
-    })
-  </script>
-</body>
-```
-
-### 2、基于简版实现中间件
-
-- middlewares
-- applyMiddleware
-- compose
-
-在这里，为了方便查看 我将多个middleware写到了一个文件中。  
-#### middlewares/index.js  
-::: details 查看
-``` js 
-export function exceptionTimeMiddleware(store){
-  return (next)=>(action)=>{
-    console.log('1')
-    try{
-    next(action)
-    }catch(e){
-      console.error('程序出错',e)
+    render() {
+      return <WrappedComponent 
+          {...this.state} 
+          {...mapDispatchToProps(this.context.store.dispatch)} 
+      />
     }
   }
-}
-export function timeMiddleware(store){
-  return (next)=>(action)=>{
-    console.log('2',Date.now(),store.getState())
-    next(action)
-  }
-}
-export function loggerMiddleware(store){
-  return (next)=>(action)=>{
-    console.log('3','log')
-    next(action)
-  }
-}
-```
-:::
 
-#### redux/applyMiddleware.js
-::: details 查看
-``` js
-import compose from './compose.js'
-// 首先看 middlewares 参数 是 [exceptionTimeMiddleware,timeMiddleware,loggerMiddleware]
-export default function applyMiddleware(middlewares){
-  // 第一层函数是通过 rewriteCreateStoreFn(createStore) 执行 传递oldCreateStore
-  return function(oldCreateStore){
-    // 第二层函数是通过 newCreateStoreFn(reducer,initState) 执行，正好接收reducer和 initState
-    return function(reducer,initState){
-      const store = oldCreateStore(reducer,initState)
-      // 中间件的函数也是柯里化函数，以下操作执行了middleware(store)
-      // 那么chain = [fn,fn,fn] fn是中间件函数执行返回的第一层函数 即：(next)=>(action)=>{}
-      const chain = middlewares.map((middleware=>middleware(store)))
-      // compose 就是执行中间件的过程，执行完成以后并返回了 dispatch 即：(action)=>{}
-      const dispatch = compose(...chain)(store.dispatch)
-      return {
-        ...store,
-        dispath
-      }
-    }
-  }
-}
-```
-:::
-
-#### redux/compose.js
-::: details 查看
-``` js 
-export default function compose(...funcs){
-  if(funcs.length){
-    return (args)=>args
+  Connect.contextTypes = {
+    store:PropTypes.object
   }
 
-  if(funcs.length === 1){
-    return func[0]
-  }
-  return funcs.reduce((a,b)=>(...args)=>a(b(args)))
-}
-```
-:::
+  return Connect
+})
 
-::: warning
-在redux/index.js中引入 applyMiddleware.js并导出 applyMiddleware方法
-:::
-
-修改redux/createStore.js中的createStore方法
-```js {2-5}
-function createStore(reducer,initState,rewriteCreateStoreFn){
-  // 如果中间件存在 那么就需要重写createStore
-  if(rewriteCreateStoreFn){
-    const newCreateStoreFn = rewriteCreateStoreFn(createStore)
-    return newCreateStoreFn(reducer,initState)
-  }
-
-  let state = initState
-  // ....
-}
+export default connect
 ```
 
-``` html 
-<body>
-  <script type="module">
-    import { createStore, combineReducers, applyMiddleware} from  './redux/index.js';
-    import infoReducer from './reducers/infoReducer.js'
-    import counterReducer from './reducers/counterReducer.js'
-    import { exceptionTimeMiddleware,timeMiddleware, loggerMiddleware } from './middlewares/index.js'
-    const reducer = combineReducers({
-      info:infoReducer,
-      counter:counterReducer
-    })
 
-    const rewriteCreateStoreFn = applyMiddleware(exceptionTimeMiddleware,timeMiddleware,loggerMiddleware)
-    // 将 middlewares传入 createStore
-    const store = createStore(reducer,{},rewriteCreateStoreFn)
 
-    store.subscribe(()=>{
-      //  订阅：当状态改变的时候，则会执行当前函数
-      console.log('currentState',store.getState())
-    })
 
-    // 手动执行dispatch 改变数据
-    store.dispatch({
-      type: 'INCREMENT'
-    })
-  </script>
-</body>
-```
-
-## 实现 bingActionCreators
-
-#### actions/info.js
-``` js 
-export function setName(){
-  return {
-    type:'SET_NAME',
-    name:'虎子'
-  }
-}
-```
-
-#### actions/counter.js
-``` js 
-export function increment(){
-  return {
-    type:'INCREMENT'
-  }
-}
-```
-#### redux/bindActionCreators.js
-``` js
-function bindActionCreator(action,dispatch){
-  return function(){
-    // 返回一个dispatch 并将action函数的this指向到 actionsCreators上
-    return dispatch(action.apply(this,arguments))
-  }
-}
-export default function bindActionCreators(actions, dispatch){
-    var actionsCreators = {}
-    for(var key in actions){
-      const actionKey = actions[key]
-      if(typeof actionKey === 'function'){
-        actionsCreators[key] = bindActionCreator(actionKey,dispatch)
-      }
-    }
-    return actionsCreators
-}
-```
-
-``` html {23-25}
-<body>
-  <script type="module">
-    import { createStore, combineReducers, applyMiddleware} from  './redux/index.js';
-    import infoReducer from './reducers/infoReducer.js'
-    import counterReducer from './reducers/counterReducer.js'
-    import { exceptionTimeMiddleware,timeMiddleware, loggerMiddleware } from './middlewares/index.js'
-    import { setName } from './actions/info.js'
-    import { increment } from './actions/counter.js'
-    const reducer = combineReducers({
-      info:infoReducer,
-      counter:counterReducer
-    })
-
-    const rewriteCreateStoreFn = applyMiddleware(exceptionTimeMiddleware,timeMiddleware,loggerMiddleware)
-    // 将 middlewares传入 createStore
-    const store = createStore(reducer,{},rewriteCreateStoreFn)
-
-    store.subscribe(()=>{
-      //  订阅：当状态改变的时候，则会执行当前函数
-      console.log('currentState',store.getState())
-    })
-    // 将action传入到函数
-    const actions = bindActionCreators({setName, increment}, store.dispatch)
-    actions.increment()  // 执行增加
-    actions.setName()
-  </script>
-</body>
-```
 
 
 
