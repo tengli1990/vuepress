@@ -1,12 +1,12 @@
 # 类型
 
-#### 布尔、数字、字符串
+### 布尔、数字、字符串
 ``` ts
 let isDone: boolean = false       // boolean
 let count: number = 60            // number
 let name: string = "bob"          // string 支持模版字符串 例如： `我的名字叫${name}`
 ```
-#### 数组
+### 数组
 
 有两种方式可以定义数组第一种：
 ``` ts
@@ -17,7 +17,7 @@ let list: number[] = [1,2,3]
 let list: Array<number> = [1,2,3]
 ```
 
-#### 元组 - Tuple
+### 元组 - Tuple
 
 元组类型允许表示一个已知数量和类型的数组，各元素的类型不必相同，比如你可以定义一对值分别为`string` 和 `number` 类型的元组。
 ``` ts
@@ -29,9 +29,9 @@ console.log(x[5].toString());           // OK, 'string' 和 'number' 都有 toSt
 x[6] = true                             // Error, 布尔不是(string | number)类型
 ```
 
-#### 枚举 - enum
+### 枚举 - enum
 enum 类型是对JavaScript 标准数据类型的一个补充，像C# 等其他语言一样，使用枚举类型可以为一组数值赋予友好的名字。 
-
+#### 数字枚举
 默认情况下，从0开始为元素编号。手动将元素编号设置为从1开始： 
 ``` ts
 // 默认
@@ -47,8 +47,32 @@ let c: Color = Color.Green;
 let colorName: string = Color[2]
 console.log(colorName)            // Green 因为默认编号设置为 Red=1 那么Green没有指定，所以默认为2
 ```
+通过枚举的属性来访问枚举成员，和枚举的名字来访问枚举类型：
+``` ts 
+enum Response {
+  No = 0,
+  Yes = 1
+}
 
-#### Void 
+function respond(recipient: string, message: Response):void{
+  // ...
+}
+
+
+respond('Princess Caroline',Response.Yes)
+```
+
+数字枚举可以被混入到[计算过的和常量成员](/basic/ts-enum.html#计算过的和常量成员)
+``` ts 
+enum E {
+    A = getSomeValue(),
+    B, // error! 'A' is not constant-initialized, so 'B' needs an initializer
+}
+```
+
+[更多枚举类型](/basic/ts-enum.html)
+
+### Void 
 
 声明一个void类型的变量没什么大用，因为它只能被赋予 null 和 undefined.
 ``` ts 
@@ -56,7 +80,7 @@ let unusable: void = undefined;
 let unusable: void = null;
 ```
 
-#### null 和 undefined
+### null 和 undefined
 ``` ts 
 // Not much else we can assign to these variables!
 let u: undefined = undefined;
@@ -73,7 +97,7 @@ let nums: number[] = undefined  // Ok [当指定了 --strictNullChecks标记时�
 :::
 
 
-#### Never
+### Never
 
 `never` 表示的时那些用不存在的值的类型。  
 `never` 类型是任何类型的子类型，也可以赋值给任何类型；  
@@ -98,7 +122,7 @@ function infiniteLoop(): never{
 }
 ```
 
-#### Object
+### Object
 
 object 是一个复杂的数据类型。
 
@@ -112,7 +136,7 @@ create('prop')        // Error
 create(10)            // Error
 ```
 
-#### 类型断言
+### 类型断言
 
 类型断言有两种形式。 
 ``` ts  

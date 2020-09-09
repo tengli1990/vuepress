@@ -33,6 +33,7 @@ const blog = [
       'framework-react16.13.0',
       'framework-redux',
       'framework-vuex',
+      'framework-vue-cli',
       'framework-ioc',
       'framework-ioc.di.aop'
     ]
@@ -81,6 +82,8 @@ const basic = [
         children: [
           'ts-types',
           'ts-declare',
+          'ts-genericity',
+          'ts-enum'
         ]
       }
     ]
@@ -156,7 +159,9 @@ const tools = [
     title:'文件解压/压缩',
     collapsable: false,
     children: [
-      "compress-rar"
+      "compress-rar",
+      "eslint.md",
+      "pre-commits"
     ]
   }
 ]

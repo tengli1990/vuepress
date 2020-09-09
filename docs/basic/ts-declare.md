@@ -1,20 +1,20 @@
 # 声明
 
-#### 属性重命名
+### 属性重命名
 ``` ts 
 let {a: name1, b: name2} = { a: "foo", b: "bar"};
 console.log(name1)  // foo
 console.log(name2)  // bar
 ``` 
 
-#### 默认值
+### 默认值
 ``` ts 
 function keepWholeObject(wholeObject: { a:string, b?: number }){
   let { a, b=1031 } = wholeObject
 }
 ```
 
-#### 函数声明
+### 函数声明
 结构也能用于函数声明
 
 ``` ts
@@ -35,7 +35,7 @@ fn({a:'yes'})   // yes 10
 fn({})          // Error  a is reqired 
 ```
 
-#### 展开
+### 展开
 
 ``` ts 
 let defaults = { food: "spicy", price: "$$", ambiance: "noisy" };
@@ -48,8 +48,7 @@ console.log(search)    // { food: "rich", price: "$$", ambiance: "noisy" }
 ``` ts 
 class C {
   p = 12;
-  m() {
-  }
+  m() {}
 }
 let c = new C();
 let clone = { ...c };
