@@ -216,5 +216,39 @@ function deepClone(obj,cacheObj = new WeakMap()){
 ```
 
 
+## 补充代码（一）
+
+`const repeatFun = repeat(console.log, 4, 3000){} repeatFun('Hello World')` 
+ 实现打印4次，每次间隔 3000ms 
+
+``` js
+// 这里直接实现优化版 添加stop方法停止运行
+function repeat(fn,times,delay){
+  timer = null
+  function start(...args){
+    var context = this
+    timeFn(times-1)
+    fn.apply(context,args,4)
+    function timeFn(n){
+      if(n>0){
+        timer =setTimeout(function(){
+          timeFn(--n)
+          fn.apply(context,args)
+        },delay)
+      }
+    }
+  }
+  function stop(){
+    clearTimeout(timer)
+  }
+  return {
+    start,
+    stop
+  }
+}
+var repeatFun  = repeat(console.log, 10, 3000)
+repeatFun.start('Hello World')
+// 使用 repeatFun.stop()停止运行
+```
 
 

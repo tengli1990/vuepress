@@ -92,7 +92,7 @@ const basic = [
     collapsable: false,
     children: [
       'js-write',
-      'js-types'
+      'js-tail-recursive'
     ]
   }, {
     title: "CSS",
