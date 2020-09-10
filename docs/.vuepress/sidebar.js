@@ -110,6 +110,12 @@ const basic = [
       'design-pattern-solid'
     ]
   }, {
+    title: '常用Web Api',
+    collapsable: false,
+    children: [
+      'webapi-CustomEvent'
+    ]
+  }, {
     title: '算法',
     collapsable: false,
     children: [
