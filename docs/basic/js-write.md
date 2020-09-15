@@ -251,4 +251,68 @@ repeatFun.start('Hello World')
 // 使用 repeatFun.stop()停止运行
 ```
 
+## 手写一个node eventEmitter
+> 实现四个方法 `on` `off` `once` `emit`
+
+``` javascript
+class eventEmiter{
+  constructor(){
+    this.listeners = new Map()
+  }
+
+  on(eventName,listener,isOnce){
+    const listeners = this.listeners.get(eventName)
+    if(isOnce){
+      listener.$$once = true
+    }
+    if(!listeners){
+       this.listeners.set(eventName,[listener])
+       return
+    }
+    listeners.push(listener)
+  }
+  once(eventName,listener){
+    this.on(eventName,listener,true)
+  }
+
+  off(eventName){
+    if(this.listeners.has(eventName)){
+      this.listeners.delete(eventName)
+    }
+  }
+  emit(eventName,...args){
+    const listeners = this.listeners.get(eventName)
+    if(!listeners){
+      return new Error(`not found ${eventName} of listeners`)
+    }
+
+    const len = listeners.length
+
+    for(let i=0;i<len;i++){
+      const listener = listeners[i]
+      if(listener.$$once){
+        listener = listener.splice(i,1)
+        i--
+      }
+      listener.apply(null, args)
+    }
+  }
+}
+
+var emitter = new EventEmitter()
+emitter.on('test',function(...arg){
+    console.log('打印1',...arg)
+})
+emitter.once('test',function(...arg){
+    console.log('打印2',...arg)
+})
+emitter.on('test',function(...arg){
+    console.log('打印3',...arg)
+})
+emitter.trigger('test',1,2,3)
+emitter.trigger('test',1,3)
+```
+
+
+
 

@@ -26,6 +26,13 @@ const blog = [
     ]
   },
   {
+    title: '进阶',
+    collapsable: false,
+    children: [
+      'advance-webassembly'
+    ]
+  },
+  {
     title: 'Framework',
     collapsable: false,
     children: [
@@ -52,6 +59,7 @@ const blog = [
     collapsable: false,
     children: [
       'engineering',
+      'engineering-docker',
       'engineering-sonarqube',
       'engineering-jenkins',
       'engineering-nexus'
@@ -119,6 +127,8 @@ const basic = [
     title: '算法',
     collapsable: false,
     children: [
+      'algorithm-list',
+      'algorithm-stack',
       'algorithm-sort',
       'algorithm-search',
       'algorithm-tree'
