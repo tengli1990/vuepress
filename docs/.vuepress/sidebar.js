@@ -129,6 +129,7 @@ const basic = [
     children: [
       'algorithm-list',
       'algorithm-stack',
+      'algorithm-linked-list',
       'algorithm-sort',
       'algorithm-search',
       'algorithm-tree'
