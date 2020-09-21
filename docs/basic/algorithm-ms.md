@@ -67,4 +67,14 @@ compile('a(b)<2>c')
 compile('a(b(c)<3>de)<2>f')
 ```
 
+## 二叉树
+给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
+<!-- 链接：https://leetcode-cn.com/problems/convert-bst-to-greater-tree -->
+``` js   
+var convertBST = function(root) {
+
+  
+};
+```
+
 
