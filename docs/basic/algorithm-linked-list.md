@@ -1,18 +1,25 @@
 # 链表
 
-## 概念和用途
+- 概念和用途
+- 定义
+- 单向链表代码实现
+- 双向链表代码实现
+
+***
+
+### 概念和用途
 
 - 数组不是组织数据结构的最佳结构
 - JavaScript中的数组被实现成了对象，与其他语言数组相比，效率低了很多。
 - 如果你发现数组实际使用时很慢，就可以考虑链表代替他。除了对数据的随机访问，链表几乎可以用在任何可以使用一维数组的地方。
 
-## 定义
+### 定义
 
 - 链表是由一系列节点组成的集合，每个节点都使用一个对象的引用指向他的后继，指向另一个节点的引用叫链。
 - 链表元素靠相互之间的关系进行引用A->B->C, B并不是链表的第二个元素，而是B跟在A后面，遍历链表就是跟着链接，从链接的首元素一直到尾元素，但不包含头节点，头元素常常被称为链表的接入点。（链表的尾元素指向一个null节点）
 
 
-## 单向链表代码实现
+### 单向链表代码实现
 
 ``` js 
 // 首先需要一个节点的构造函数，用它来创建节点对象
@@ -79,7 +86,7 @@ nl.insert('third','second')
 nl.remove('second')
 nl.display()
 ```
-## 双向链表代码实现
+### 双向链表代码实现
 
 ``` js
 function Node(value){
@@ -143,11 +150,11 @@ function findLast(){
 }
 
 function reverse(){
-  var lastNode = this.findLast()
-  var newNode = new Node(0)
-  while(lastNode.previous != null){
-    newNode.next = lastNode.previous
-    newNode.next.previous = newNode
+  var head = this.head
+  var prev = null
+  var current = head
+  while(head){
+    [current.next,prev,current] = [prev,current,current.next]
   }
 }
 

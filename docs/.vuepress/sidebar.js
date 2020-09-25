@@ -29,7 +29,8 @@ const blog = [
     title: '进阶',
     collapsable: false,
     children: [
-      'advance-webassembly'
+      'advance-webassembly',
+      'advance-js-stack'
     ]
   },
   {
@@ -77,16 +78,17 @@ const blog = [
   }
 ]
 // 编程基础
+const basicCollapsable = true
 const basic = [
   {
     title: 'TypeScript',
-    collapsable: false,
+    collapsable: basicCollapsable,
     children: [
       'ts-tsconfig',
       {
         title: '基础总结',
         path:'/basic/ts-basic-all',
-        collapsable: false,
+        collapsable: basicCollapsable,
         children: [
           'ts-types',
           'ts-declare',
@@ -97,14 +99,14 @@ const basic = [
     ]
   }, {
     title: 'JavaScript',
-    collapsable: false,
+    collapsable: basicCollapsable,
     children: [
       'js-write',
       'js-tail-recursive'
     ]
   }, {
     title: "CSS",
-    collapsable: false,
+    collapsable: basicCollapsable,
     children: [
       {
         title: '手写部分',
@@ -113,19 +115,19 @@ const basic = [
     ]
   }, {
     title: '设计模式',
-    collapsable: false,
+    collapsable: basicCollapsable,
     children: [
       'design-pattern-solid'
     ]
   }, {
     title: '常用Web Api',
-    collapsable: false,
+    collapsable: basicCollapsable,
     children: [
       'webapi-CustomEvent'
     ]
   }, {
     title: '算法',
-    collapsable: false,
+    collapsable: basicCollapsable,
     children: [
       'algorithm-list',
       'algorithm-stack',

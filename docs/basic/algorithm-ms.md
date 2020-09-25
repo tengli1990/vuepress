@@ -67,14 +67,85 @@ compile('a(b)<2>c')
 compile('a(b(c)<3>de)<2>f')
 ```
 
-## 二叉树
+## 二叉树（一）
 给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
 <!-- 链接：https://leetcode-cn.com/problems/convert-bst-to-greater-tree -->
 ``` js   
 var convertBST = function(root) {
-
   
 };
 ```
 
 
+## 链表（二）
+生成一个链表，保存100个随机生成的整数，整数不分正负。
+
+``` js
+
+function NodeList(value){
+  this.value = value 
+  this.next = null
+}
+
+
+function createRandomNode(n){
+  var node = new NodeList('head');
+  var i = 0
+  while(i<n){
+    i++
+    var num = (100-Math.random()*200<<0)
+    var newNode = new NodeList(num)
+    newNode.next = node.next
+    node.next = newNode
+  }
+  return node.next
+}
+
+createRandomNode(100)
+
+```
+
+## 数组
+给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和
+
+
+## 数组转换为树
+>  [{id:1, parentId: 0}, {id:2, parentId:1},{id:3, parentId:1}]把这个数组从顶级分类递归查找子分类，最终构建一个树状数组。结果输出如下[{id:1, parentId: 0,children:[{id:2, parentId:1},{id:3, parentId:1}]}]，parentId为0 的是根节点
+
+``` js 
+var list = [{
+    id: 1,
+    parentId: 0
+}, {
+    id: 2,
+    parentId: 1
+}, {
+    id: 3,
+    parentId: 1
+},{
+    id:4,
+    parentId:3
+}]
+//  for 循环
+function arrayToTree(list, parentId = 0) {
+   var result = []
+   for(var i=0;i<list.length;i++){
+       if(list[i].parentId === parentId){
+           result.push({
+              ...list[i],
+              children:arrayToTree(list,list[i].id)
+           })
+       }
+   }
+   return result
+}
+
+// filter
+
+function arrayToTree(list,parentId = 0){
+  return list.filter(item=>item.parentId === parentId).map(item=>({...item,children:arrayToTree(list,item.id)}))
+}
+
+arrayToTree(list)
+
+```
