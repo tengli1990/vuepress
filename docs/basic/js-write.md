@@ -313,6 +313,14 @@ emitter.trigger('test',1,2,3)
 emitter.trigger('test',1,3)
 ```
 
+## 手写Array负索引
+> 使用proxy实现数组负索引 arr[-1]
+
+``` js
+var arr = [1,2,3,4,5]
+
+var proxy = new Proxy()
+```
 
 
 

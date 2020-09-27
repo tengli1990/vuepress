@@ -109,7 +109,7 @@ createRandomNode(100)
 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和
 
 
-## 数组转换为树
+## 数组转换为树结构
 >  [{id:1, parentId: 0}, {id:2, parentId:1},{id:3, parentId:1}]把这个数组从顶级分类递归查找子分类，最终构建一个树状数组。结果输出如下[{id:1, parentId: 0,children:[{id:2, parentId:1},{id:3, parentId:1}]}]，parentId为0 的是根节点
 
 ``` js 
@@ -149,3 +149,43 @@ function arrayToTree(list,parentId = 0){
 arrayToTree(list)
 
 ```
+
+## 实现一个n个请求并发的函数
+> sendRequest(urls, max, callback)
+请实现下的函数，可以批量请求数据，所有的url地址在urls参数中，同时可以
+通过max参数控制请求的并发度，当所有请求结束之后，需要执行callback回调函数，
+发请求的函数可以直接使用fetch即可
+
+``` js 
+function sendRequest(urls,max,callback){
+  var completedNum = 0
+  var len = urls.length
+  var args = []
+  var options = {}
+  var request = function(){
+    if(urls.length){
+      let url = urls.splice(0)[1];
+      fetch(url,options).then(res=>{
+          args[completedNum] = res
+          completedNum++
+          if(completedNum === len){
+            callback(args)
+          }
+          request()
+      })
+    }
+  }
+
+  for(var i=0;i<max;i++){
+    request()
+  }
+}
+
+sendRequest(
+  ['http://xxxx.com/api','http://xxxx.com/api','http://xxxx.com/api'],
+  2,(res)=>{
+    console.log()
+  })
+```
+
+    

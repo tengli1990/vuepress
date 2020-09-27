@@ -132,9 +132,10 @@ const basic = [
       'algorithm-list',
       'algorithm-stack',
       'algorithm-linked-list',
+      'algorithm-binary-tree',
       'algorithm-sort',
       'algorithm-search',
-      'algorithm-tree'
+      
     ]
   }
 ]
