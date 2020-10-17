@@ -318,9 +318,53 @@ emitter.trigger('test',1,3)
 
 ``` js
 var arr = [1,2,3,4,5]
-
-var proxy = new Proxy()
+var proxyArr = new Proxy(arr,{
+  get(target,propKey,receiver){
+    return Reflect.get(target,propKey<0?target.length+(+propKey):propKey,receiver)
+  }
+})
+proxyArr[-1] // 5
 ```
 
+## 手写mySetInterval
+> mySetInterval(fn, a, b),每次间隔 a,a+b,a+2b 的时间,然后写一个 myClear，停止上面的 mySetInterval
+
+``` js
+function mySetInterval(fn,a,b){
+  var times = 0
+  var timer = null
+  function loop(){
+      var time = a+times*b
+      setTimeout(function(){
+          times++
+          fn()
+          loop()
+      },time)
+  }
+  function clear(){
+      clearTimeout(timer)
+  }
+  return {
+      clear,
+      loop
+  }
+}
+var ret = mySetInterval(function(){
+   console.log(1)
+},1000,1000)
+ret.loop()
+ret.clear()
+```
+
+## 实现链式调用
+``` js
+
+```
+
+## 实现lodash的_get
+
+``` js
+
+```
 
 

@@ -132,6 +132,7 @@ const basic = [
       'algorithm-list',
       'algorithm-stack',
       'algorithm-linked-list',
+      'algorithm-hash',
       'algorithm-binary-tree',
       'algorithm-sort',
       'algorithm-search',
@@ -168,8 +169,9 @@ const books = [{
   collapsable: false,
   children: [
     'javascript-01',
-    'javascript-02',
-    'javascript-03',
+    // 'javascript-02',
+    // 'javascript-03',
+    'javascript-ap',
   ]
 }]
 
