@@ -1,6 +1,4 @@
-# SOLID
-
-## 设计模式的六大原则
+# SOLID 设计模式的六大原则
 - Single Responsibility Principle：单一职责原则  
 - Open Closed Principle：开闭原则  
 - Liskov Substitution Principle：里氏替换原则  

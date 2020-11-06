@@ -173,7 +173,7 @@ ECMAScript 只是对实现这个规范描述的所有方面的一门语言的称
 <Title title="2.3 文档模式" />
 
 - 混杂模式(quirks mode)：前者让 IE 像 IE5 一样(支持一些非标准的特性)  
-- 标准模式(quirks mode)：让 IE 具有兼容标准的行为。
+- 标准模式(standards mode)：让 IE 具有兼容标准的行为。
 
 以上两种模式的主要区别只体现在通过 `CSS` 渲染的内容方面，但对 `JavaScript` 也有一些关联影响，或称为副作用。
 
@@ -329,3 +329,526 @@ ES6规定的所有关键字如下:
  ::: warning 注意
  以上词汇不能用做标识符，但可以用作对象的属性名。（最好还是不要使用关键字和保留字作为属性名）
  :::
+
+<Title title="3.3 变量" />
+
+<Title sub title="var" />
+* 函数级作用域
+* 作用域提升
+* 重复声明不报错
+* 全局声明的变量成为window对象的属性
+
+::: warning 注意
+不推荐通过省略var操作符来定义全局变量，因为这很难维护，也会造成困扰。在严格模式下，给未声明的变量赋值，则会抛出ReferanceError。
+
+:::
+
+<Title sub title="let" />
+
+* 块级作用于
+* 没有提升，有TDZ（Temporal Dead Zone）
+* 不能重复生命
+* 混用var和let，重复声明会报错
+* 全局声明不是window对象的属性
+
+<Title sub title="const" />
+
+* 声明同时必须初始化变量
+* 初始化后不能修改
+* 不能修改仅限于常量的引用
+* 不能用于声明会自增的迭代变量
+
+<Title sub title="声明风格及最佳实践" />
+
+- 不使用var
+- 优先使用const，次之let
+
+
+<Title title="3.4 数据类型" />
+
+<Title sub title="typeof操作符" />
+
+对一个值使用 typeof 操作符会返回下列字符串之一:  
+|值|含义|值|含义|
+|-|-|-|-|
+|'undefined'| 表示值为定义  | 'function'| 表示值为函数|
+|'string'  | 表示值为字符串 | 'boolean'| 表示值为布尔值|
+|'number' | 表示值为数字|'object'| 表示值为对象|
+|'symbol' | 表示值为符号|
+
+::: warning 注意
+- 调用 typeof null 返回的是"object"。这是因为特殊值 null 被认为是一个对空对象的引用。  
+- 严格来讲，函数在ECMAScript中被认为是对象，并不代表一种数据类型。可是， 函数也有自己特殊的属性。为此，就有必要通过 typeof 操作符来区分函数和其他对象。
+:::
+
+<Title sub title="Undefined类型" />
+Undefined 类型只有一个值，就是特殊值undefined，当使用var或let声明一个变量但未初始化时，这个变量的值就等于undefined
+``` js 
+let message 
+message == undefined // true
+```
+包含 undefined 值的变量跟未定义变量是有区别的。请看下面的例子:
+``` js
+let message 
+console.log(message) // undefined
+console.log(age) // 报错：age is not defined
+typeof age  // undefined typeof的特殊的安全防范机制避免了报错
+```
+<Title sub title="Null类型" />
+
+特殊值null，即空对象指针，这也是typeof null === 'object'的原因。  
+
+``` js 
+if(!a&& typeof a === 'object'){
+  // 如果成立 则a为null
+}
+```
+
+<Title sub title="Boolean" />
+
+Boolean(布尔值)类型是 ECMAScript 中使用最频繁的类型之一，有两个字面值:true 和 false。 这两个布尔值不同于数值，因此 true 不等于 1，false 不等于 0。
+
+::: warning ⚠️ 注意
+布尔值字面量 true 和 false 是区分大小写的，因此 True 和 False(及其他大小混写形式) 5 是有效的标识符，但不是布尔值。
+:::
+
+
+<Title sub title="3.4.7 Symbol类型" />
+
+Symbol 是 ES6新增的数据类型，符号是原始值，且符号实例唯一、不可变。
+
+- 1. 符号的基本用法
+- 2. 使用全局符号注册表
+- 3. 使用符号作为属性
+- 4. 常用内置符号
+- 5. Symbol.asyncIterator
+- 6. Symbol.hasInstance
+- 7. Symbol.isConcatSpreadable
+- 8. Symbol.iterator
+- 9. Symbol.match
+- 10. Symbol.replace
+- 11. Symbol.search
+- 12. Symbol.species
+- 13. Symbol.split
+- 14. Symbol.toPrimitive
+- 15. Symbol.toStringTag
+- 16. Symbol.unscopables
+
+#### 1.符号的基本用法
+
+##### 使用函数Symbol()初始化
+``` js
+let sym = Symbol()
+console.log(typeof sym ) // symbol
+```
+##### 使用字符串描述Symbol()
+
+``` js 
+let fooSymbol = Symbol('foo');
+let otherFooSymbol = Symbol('foo');
+console.log(genericSymbol == otherGenericSymbol);  // false
+```
+::: warning ⚠️ 注意
+以上代码传入的 “foo”描述字符串参数 与 符号定义或标识完全无关
+:::
+
+##### Symbol()函数不能创建包装对象
+``` js 
+let mySymbol = new Symbol();  // TypeError: Symbol is not a constructor
+```
+可以借用 Object()函数实现包装对象
+``` js
+var objSym = Object(Symbol())
+console.log(typeof objSym) // object
+```
+
+#### 2.使用全局符号注册表
+
+##### 可以通过使用Symbol.for方法创建并重用符号
+``` js
+// 第一次执行创建符号
+let fooSym = Symbol.for("foo") 
+// 第二次查找是否已经创建了 foo 符号 如果创建了 则直接返回已创建的符号
+let otherSym = Symbol.for("foo") 
+console.log(fooSym === otherSym) // true
+```
+::: warning ⚠️ 注意
+- 通过Symbol('foo') 直接创建的符号不能被Symbol.for('foo')查找到，所以他们并不相等。  
+- 任何传给Symbol.for方法的参数都会被转换为字符串，此外，注册表中使用的键同时也会被用作符号描述。  
+:::
+
+##### 使用Symbol.keyFor()查询注册表
+Symbol.keyFor()这个方法接收符号作为参数，返回全局对应的字符串键。如果找不到则返回`undefined`。
+
+``` js
+let sym = Symbol.for('foo')
+console.log(Symbol.keyFor(sym)) // foo
+```
+::: warning ⚠️ 注意
+Symbol.keyFor()如果接收的不是符号，那么就会抛出错误：TypeError: xxx is not a symbol
+:::
+
+
+#### 3.使用符号作为属性
+
+凡是可以使用字符串或数值作为属性的地方，都可以使用符号。这就包括了对象字面量属性和 Object.defineProperty()/Object.defineProperties()定义的属性。
+
+``` js
+let s1 = Symbol('foo')
+let s2 = Symbol('bar')
+let s3 = Symbol('baz')
+let s4 = Symbol('qux')
+let o = {
+  [s1]:'my name is s1',
+  [s2]:'my name is s2',
+  [s3]:'my name is s3',
+  [s4]:'my name is s4'
+}
+Object.defineProperty(o,s2,{
+  value:'my real name is bar'
+})
+Object.defineProperties(o, {
+    [s3]: {value: 'baz'},
+    [s4]: {value: 'qux'}
+});
+console.log(o[s1]) // my name is s1
+console.log(o[s2]) // my real name is bar
+console.log(o[s3]) // baz
+console.log(o[s4]) // qux
+```
+
+##### Object.getOwnPropertyNames & Object.getOwnPropertySymbols
+
+首先我们来看 getOwnPropertyNames 的用法，用来获取对象属性的集合，但是不包括Symbol的符号属性
+``` js
+var obj = {
+  bar:'bar',
+  foo:'foo',
+  [Symbol('baz')]:'symbol'
+}
+Object.getOwnPropertyNames(obj) // ['bar','foo']
+```
+获取符号的属性需要使用 getOwnPropertySymbols 方法
+
+``` js
+Object.getOwnPropertySymbols(obj) // [Symbol(baz)]
+```
+
+#### 4.常用内置符号
+
+ES6 引入了一批常用的内置符号，用于暴露语言内部的行为；
+
+##### 特点
+- 以Symbol工厂函数字符串属性的形式存在。
+- 可直接访问、重写或模拟
+- 最重要的用途就是用来重新定义，从而改变原生结构,例如：修改for of 中的Symbol.iterator
+- 所有内置符号都是不可写、不可枚举、不可配置
+
+::: warning ⚠️ 注意
+在ECMAScript规范中，提到的@@iterator 指的就是 Symbol.iterator
+:::
+
+#### 5.Symbol.asyncIterator
+- 是一个方法
+- 该方法返回对象默认的AsyncIterator。
+- 使用for-await-of语句遍历执行异步迭代操作。循环时，它们会调用以 Symbol.asyncIterator 为键的函数，并期望这个函数会返回一个实现迭代器 API 的对象。很多时候，返回的对象是实现该 API 的 AsyncGenerator:
+  ``` js
+  class Emitter {
+    constructor(max){
+      this.max = max;
+      this.asyncIdx = 0
+    }
+
+    async *[Symbol.asyncIterator](){
+      while(this.asyncIdx < this.max){
+        return new Promise(resolve=>resolve(this.asyncIdx++))
+      }
+    }
+  }
+
+  function asyncCount(){
+    let emitter = new Emitter(5)
+
+    for await(const x of emitter ){
+      console.log(x)
+    }
+  }
+  asyncCount()
+  ```
+
+::: warning ⚠️ 注意
+Symbol.asyncIterator 是 ES2018 规范定义的，因此只有版本非常新的浏览器 支持它。
+:::
+
+#### 6.Symbol.hasInstance
+- 是一个方法
+- 该方法决定一个构造器对象是否认可一个对象是它的实例。 类似于 instanceof
+- 在 ES6 中，instanceof 操作符会使用 Symbol.hasInstance 函数来确定关系。以 Symbol. hasInstance 为键的函数会执行同样的操作，只是操作数对调了一下:
+  ``` js 
+  function Foo(){};
+  let f = new Foo();
+  console.log(Foo[Symbol.hasInstance](f)) // true
+  console.log(f instance of Foo) // true
+  ```
+- 重新定义Symbol.hasInstance
+  ``` js
+  class Baz(){
+    static [Symbol.hasInstance](){
+      return false
+    }
+  }
+  var b = new Baz()
+  Baz[Symbol.hasInstance](b) // false
+  // 由于 instanceof 也会去原型上寻找 Symbol.hasInstance 所以也返回false
+  b instanceof Baz // false
+  ```
+
+#### 7.Symbol.isConcatSpreadable
+
+- 是一个值，值类型：Boolean
+- 该属性返回表示是否可以通过 `Array.prototype.concat()`方法打平其数组元素，覆盖 Symbol.isConcat- Spreadable 的值可以修改这个行为。默认情况下会被打平到已有的数组
+- Symbol.isConcatSpreadable 真假值
+  ``` js
+  var arr1 = ['foo']
+  var arr2 = ['baz']
+  // 默认情况 值为 undefined ，自动被打平  等于 true的情况
+  arr2[Symbol.isConcatSpreadable]  // undefined 
+  arr1.concat(arr2)   // ['foo','baz']
+
+  // false 将追加的对象添加到末尾
+  arr2[Symbol.isConcatSpreadable] = false
+  arr.concat(arr2) // ['foo',['baz']]
+  ```
+
+- 支持合并 类数组对象
+  ``` js
+   var arrayLikeObj = {length:1, 0:'bar'}
+   var arr = ['foo']
+   arr.concat(arrayLikeObj) // ['foo',{length:1,0:'bar'}]
+   arrayLikeObj[Symbol.isConcatSpreadable] = true
+   arr.concat(arrayLikeObj) // ['foo','bar']
+  ```
+- 非类数组对象
+  ``` js
+  var obj = {a:1}
+  var arr = ['foo']
+  arr.concat(obj) // ['foo',{a:1}]
+  obj[Symbol.isConcatSpreadable] = true
+  arr.concat(obj) // ['foo']
+  ```
+
+#### 8.Symbol.iterator
+
+- 是一个方法
+- 该方法返回对象默认迭代器，使用for - of遍历。
+  for - of 循环这样的语句结构会利用这函数执行迭代操作，他们会调用以 Symbol.iterator为键的函数，返回迭代器API对象，返回对象很多时候就是实现迭代对象的 Generator
+  ``` js
+  class Emitter{
+    constructor(max){
+      this.idx = 0;
+      this.max = max
+    }
+    *[Symbol.iterator](){
+      while(this.idx < this. max){
+        yield this.idx++
+      }
+    }
+  }
+  function count(){
+    const emitter = new Emitter(2)
+    for(let key of emitter){
+      console.log(key) // 0 .. 1 
+    }
+
+    // 等同于以上for - of
+    /*for(let i = 0;i<2;i++){
+      console.log(emitter[Symbol.iterator]().next().value)
+    }*/
+  }
+  count()
+  ```
+
+#### 9.Symbol.match
+
+- 是一个正则表达式方法
+- 该方法用正则表达式去匹配字符串。由 `String.prototype.match` 方法使用，此方法会使用以`Symbol.match` 为键的函数来对正则表达式求值。
+
+  ``` js
+  class StringMatcher{
+    constructor(str){
+      this.str = str
+    }
+
+    [Symbol.match](target){
+      return target.includes(this.str)
+    }
+  }
+
+  'foostring'.match(new StringMatcher('foo')) // true
+  'foostring'.match(new StringMatcher('quex')) // false
+  ```
+
+#### 10.Symbol.replace
+
+- 是一个正则表达式方法
+- 该方法替换一个字符串中匹配的字符串，使用String.prototype.replace 方法使用，此方法会使用 Symbol.replace 为键的函数来对正则表达式求值。
+  ``` js   
+  class StringReplacer{
+    constructor(str){
+      this.str = str
+    }
+    [Symbol.replace](target,replacement){
+      return target.split(this.str).join(replacement)
+    }
+  }
+
+  // 将 strquereplace 中的 que 替换成 xxx
+  'strquereplace'.replace(new StringReplacer('que'),'xxx')
+  ```
+
+#### 11.Symbol.search
+
+- 是一个正则表达式方法
+- 该方法返回字符串中匹配正则表达式的索引，使用String.prototype.search 方法来使用。 次方法会使用以Symbol.search 为键的函数来对正则表达式求值。
+
+  ``` js  
+    class StringSearcher{
+      constructor(str){
+        this.str = str;
+      }
+      [Symbol.search](target){
+        return target.indexOf(this.str)
+      }
+    }
+
+    'fooString'.search(new StringSearcher('foo'))
+
+  ```
+
+#### 12.Symbol.species
+
+- 是一个值
+- 该函数作为创建派生对象的构 造函数”。用于对内置类型实例方法的返回值暴露实例化派生对象的方法。用Symbol.species定义静态的获取器(getter)方法，可以覆盖新创建实例的原型定义:
+
+  ``` js 
+  class CustomArray extends Array {
+    static get [Symbol.species](){
+      return Array
+    }
+  }
+  let arr = new CustomArray(1,2,3)
+  let derivedObj = arr.map(v=>v)
+  derivedObj instanceof CustomArray // false 
+  derivedObj instanceof Array // true 
+  ```
+  以上代码通过数组的的内置方法map会创建一个派生对象 derivedObj，那么派生对象 derivedObj 的构造函数就是 Symbol.species 方法的返回值 所以 derivedObj 的构造函数是 Array，并不是 CustomArray。
+
+##### 使用了此属性的方法
+
+- Array.prototype.concat();
+- Array.prototype.slice();
+- Array.prototype.splice();
+- Array.prototype.filter();
+- Array.prototype.flat();
+- Array.prototype.map();
+- Array.prototype.flatMap();
+
+#### 13.Symbol.split
+
+- 是一个正则表达式方法
+- 该方法在匹配正则表达式的索引位置拆分字符串。由Sting.prototype.split方法使用，可以重新定义Symbol.split 
+- RegExp默认定义了Symbol.split方法，接收正则参数，如果传入非RegExp对象类型，则会将参数强制转换成正则。
+- 可重新定义
+  ``` js   
+  class StringSplit{
+    constructor(str){
+      this.str = str;
+    }
+    
+    [Symbol.split](target){
+      return target.split(this.str)
+    }
+  }
+  'foobarbaz'.split(new StringSplit('baz')) // ['foo','baz']
+  ```
+
+#### 14.Symbol.toPrimitive
+
+- 是一个方法
+- 该方法将对象转换为相应的原始 值。由 ToPrimitive 抽象操作使用。  
+  很多内置操作都会尝试强制将对象转换为原始值，包括字符串、 数值和未指定的原始类型。
+- 可重新定义
+  ``` js
+  let obj = {
+    [Symbol.toPrimitive](hint){
+      if(hint === 'number'){
+        return 42
+      }
+      if(hint === 'string'){
+        return 'hello'
+      }
+      return true
+    }
+  }
+
+  console.log(+obj) //  40 number
+  console.log(`${obj}`) // hello  string
+  console.log(obj+'') // true   default 
+  ```
+##### toString 和 valueOf
+
+- toString()
+  该方法返回一个表示该对象的字符串
+- valueOf()
+  该方法返回指定对象的原始值
+
+  <!-- TODO：需要补充 -->
+
+#### 15.Symbol.toStringTag
+
+- 是一个字符串，用于创建对象的默认字符串描述
+- 由内置方法Object.prototype.toString()使用。
+  ``` js   
+  let s = new Set() // Set(0) {}
+  class Foo {}
+  let reg = new RegExp(/abc/)
+
+  s.toString()      // [object Set]
+  Foo.toString()    // class Foo {}
+  reg.toString()    // /abc/
+
+  class Bar {
+    constructor(){
+      this[Symbol.toStringTag] = 'Bar'
+    }
+  }
+  let bar = new Bar()
+  bar.toString()            // [object Bar]
+  bar[Symbol.toStringTag]   // Bar
+  ```
+
+#### 16.Symbol.unscopables
+
+- 是一个对象，该对象所有的以及继承的属性，都会从关联对象with环境绑定中排除。
+- 设置Sybol.unscpables符号映射的属性的键值为true，就可以阻止该属性出现在with中
+  ``` js 
+  const o = {
+    foo:'my name is o'
+  }
+  with(o){
+    console.log(foo) // my name is o
+  }
+  o[Symbol.unscpables] = {
+    foo: true
+  }
+  with(o){
+    console.log(foo) // ReferenceError
+  }
+  ```
+
+
+
+
+
+
+

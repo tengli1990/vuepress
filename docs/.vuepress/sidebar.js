@@ -117,7 +117,8 @@ const basic = [
     title: '设计模式',
     collapsable: basicCollapsable,
     children: [
-      'design-pattern-solid'
+      'design-pattern-solid',
+      'design-pattern-ioc'
     ]
   }, {
     title: '常用Web Api',
