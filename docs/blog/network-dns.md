@@ -1,7 +1,7 @@
 # DNS详解
 
-## 什么事DNS？他的作用是什么？
-DNS是Domain Mame System,域名系统，用于将域名转换为IP。  
+## 什么是DNS？他的作用是什么？
+DNS是Domain Name System,域名系统，用于将域名转换为IP。  
 
 #### 域名分级
 域名也分好多种，带www.开头的都是二级域名，一级域名都是不带www. 域名里有几个 . 就是几级域名。com是根域名。

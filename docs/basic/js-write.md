@@ -356,15 +356,135 @@ ret.loop()
 ret.clear()
 ```
 
-## 实现链式调用
-``` js
+## 手写Promise
 
-```
+``` js 
+const FULFILLED = 'FULFILLED'
+const PENDING = 'PENDING'
+const REJECTED = 'REJECTED'
+function promiseResolution(promise2,x, resolve,reject){
 
-## 实现lodash的_get
+  // 处理循环引用
+  if(promise2 === x){
+    throw new Error('x 为循环引用')
+    return
+  }
+  // 处理promise
+  if(x instanceof MyPromise){
+    if(x.state === PENDING){
+      x.then(y=>{
+        promiseResolution(promise, x, resolve, reject)
+      },reject)
+    }else{
+      x.state === FULFILLED && resolve(x.val)
+      x.state === REJECTED && reject(x.val)
+    }
+  }else 
+  // thenanble
+  if((typeof x === "object" || typeof x === "function") && x != null){
+      if(typeof x.then === "function"){
+        x.then(y=>{
+          promiseResolution(promise, x, resolve, reject)
+        },reject)
+      }else{
+        resolve(x)
+      }
+  }else{
+    resolve(x)
+  }
+}
+class MyPromise{
+  static all(promiseArray){
+    return new MyPromise((resolve,reject)=>{
+      const len = promiseArray.length
+      const resultArray = []
+      let successTimes = 0
+      const promiseProcess = function(index, data){
+        resultArray[index] = data
+        successTimes++
+        if(successTimes === len){
+          resolve(resultArray)
+        }
+      }
+      for(let i=0;i<len;i++){
+        const promise = promiseArray[i]
+        promise.then(data=>{
+          promiseProcess(i,data)
+        },reject)
+      }
+    })
+  }
+  constructor(executor){
+    this.val = undefined
+    this.state = PENDING
+    this.onFulfilledCallbacks = []
+    this.onRejectedCallbacks = []
 
-``` js
+    const resolve = val => {
+      if((typeof val === "object" || typeof x === "function") && val.then){
+        promiseResolution(this, val, resolve, reject)
+        return
+      }
+      setTimeout(()=>{
+        if(this.state == PENDING){
+          this.state = FULFILLED
+          this.val = val
+          this.onFulfilledCallbacks.map(fn=>fn())
+        }
+      })
+    }
 
+    const reject = val => {
+      setTimeout(()=>{
+        if(this.state == PENDING){
+          this.state = REJECTED
+          this.val = val
+          if(this.onRejectedCallbacks.length){
+            this.onRejectedCallbacks.map(fn=>fn())
+          }else{
+            throw new Error(val)
+          }
+        }
+      })
+    }
+
+    try{
+      executor(resolve,reject)
+    }catch(e){
+      reject(e)
+    }
+  }
+
+  then(onFullResolved = val=>val,onRejected= err=> {
+    throw new Error(err)
+  }){
+    const promise2 = new MyPromise((resolve,reject) => {
+       if(this.state === FULFILLED){
+         const x = onFullResolved(this.val)
+          promiseResolution(promise2,x,resolve,reject)
+       }
+       if(this.state === REJECTED){
+         const x = onRejected(this.val)
+          promiseResolution(promise2,x,resolve,reject)
+       }
+       if(this.state === PENDING){
+         this.onFulfilledCallbacks.push(()=>{
+           const x = onFullResolved(this.val)
+           promiseResolution(promise2,x,resolve,reject)
+         })
+
+         this.onRejectedCallbacks.push(()=>{
+           const x = onRejected(this.val)
+           promiseResolution(promise2,x,resolve,reject)
+         })
+       }
+    })
+    return promise2
+  }
+  catch(callback){
+    return this.then(null,callback)
+  }
+}
 ```
 
 
