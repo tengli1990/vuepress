@@ -359,131 +359,218 @@ ret.clear()
 ## 手写Promise
 
 ``` js 
-const FULFILLED = 'FULFILLED'
-const PENDING = 'PENDING'
-const REJECTED = 'REJECTED'
-function promiseResolution(promise2,x, resolve,reject){
+const PENDING = 'pending'
+const FULFILLED = 'fulfilled'
+const REJECTED = 'rejected'
 
-  // 处理循环引用
-  if(promise2 === x){
-    throw new Error('x 为循环引用')
-    return
-  }
-  // 处理promise
-  if(x instanceof MyPromise){
-    if(x.state === PENDING){
-      x.then(y=>{
-        promiseResolution(promise, x, resolve, reject)
-      },reject)
-    }else{
-      x.state === FULFILLED && resolve(x.val)
-      x.state === REJECTED && reject(x.val)
+function promiseResolionHandler(promise2, x, resolve, reject) {
+
+    // 处理then中的循环
+
+    if (x === promise2) {
+        throw new Error('循环引用了 ')
     }
-  }else 
-  // thenanble
-  if((typeof x === "object" || typeof x === "function") && x != null){
-      if(typeof x.then === "function"){
-        x.then(y=>{
-          promiseResolution(promise, x, resolve, reject)
-        },reject)
-      }else{
-        resolve(x)
-      }
-  }else{
-    resolve(x)
-  }
-}
-class MyPromise{
-  static all(promiseArray){
-    return new MyPromise((resolve,reject)=>{
-      const len = promiseArray.length
-      const resultArray = []
-      let successTimes = 0
-      const promiseProcess = function(index, data){
-        resultArray[index] = data
-        successTimes++
-        if(successTimes === len){
-          resolve(resultArray)
-        }
-      }
-      for(let i=0;i<len;i++){
-        const promise = promiseArray[i]
-        promise.then(data=>{
-          promiseProcess(i,data)
-        },reject)
-      }
-    })
-  }
-  constructor(executor){
-    this.val = undefined
-    this.state = PENDING
-    this.onFulfilledCallbacks = []
-    this.onRejectedCallbacks = []
 
-    const resolve = val => {
-      if((typeof val === "object" || typeof x === "function") && val.then){
-        promiseResolution(this, val, resolve, reject)
+    // 是否是promise对象
+    if (x instanceof MyPromise) {
+        if (x.state === PENDING) {
+            x.then(y=>{
+                promiseResolionHandler(promise2, y, resolve, reject)
+            }
+            , reject)
+        }
+        x.state === FULFILLED && resolve(x.val)
+        x.state === REJECTED && reject(x.val)
+
         return
-      }
-      setTimeout(()=>{
-        if(this.state == PENDING){
-          this.state = FULFILLED
-          this.val = val
-          this.onFulfilledCallbacks.map(fn=>fn())
+    }
+
+    // 是否是thenable对象
+    if ((typeof x === 'object' || typeof x === 'function') && x !== null) {
+        if (typeof x.then === 'function') {
+            x.then(y=>{
+                promiseResolionHandler(promise2, y, resolve, reject)
+            }
+            , reject)
+        } else {
+            resolve(x)
         }
-      })
+    } else {
+        resolve(x)
     }
 
-    const reject = val => {
-      setTimeout(()=>{
-        if(this.state == PENDING){
-          this.state = REJECTED
-          this.val = val
-          if(this.onRejectedCallbacks.length){
-            this.onRejectedCallbacks.map(fn=>fn())
-          }else{
-            throw new Error(val)
-          }
+}
+
+class MyPromise {
+    constructor(fn) {
+        this.val = undefined
+        this.state = PENDING
+        this.resolveCallbacks = []
+        this.rejectCallbacks = []
+
+        this._resolve = this.resolve.bind(this)
+        this._reject = this.reject.bind(this)
+
+        try {
+            fn(this._resolve, this._reject)
+        } catch (err) {
+            this._reject(err)
         }
-      })
     }
 
-    try{
-      executor(resolve,reject)
-    }catch(e){
-      reject(e)
+    resolve(value) {
+        if ((typeof value === 'object' || typeof value === 'function') && value.then) {
+            promiseResolionHandler(this, value, this._resolve, this._reject)
+            return
+        }
+
+        setTimeout(()=>{
+            if (this.state === PENDING) {
+                this.state = FULFILLED
+                this.val = value
+                this.resolveCallbacks.map(fn=>fn())
+            }
+        }
+        )
+
     }
-  }
 
-  then(onFullResolved = val=>val,onRejected= err=> {
-    throw new Error(err)
-  }){
-    const promise2 = new MyPromise((resolve,reject) => {
-       if(this.state === FULFILLED){
-         const x = onFullResolved(this.val)
-          promiseResolution(promise2,x,resolve,reject)
-       }
-       if(this.state === REJECTED){
-         const x = onRejected(this.val)
-          promiseResolution(promise2,x,resolve,reject)
-       }
-       if(this.state === PENDING){
-         this.onFulfilledCallbacks.push(()=>{
-           const x = onFullResolved(this.val)
-           promiseResolution(promise2,x,resolve,reject)
-         })
+    reject(val) {
+        setTimeout(()=>{
+            if (this.state === PENDING) {
+                this.state = REJECTED
+                this.val = val
+                if (this.rejectCallbacks.length) {
+                    this.rejectCallbacks.map(fn=>fn())
+                } else {
+                    throw new Error(this.val)
+                }
+            }
+        }
+        )
+    }
 
-         this.onRejectedCallbacks.push(()=>{
-           const x = onRejected(this.val)
-           promiseResolution(promise2,x,resolve,reject)
-         })
-       }
-    })
-    return promise2
-  }
-  catch(callback){
-    return this.then(null,callback)
-  }
+    then(onResolved=(val)=>val, onRejected=(err)=>err) {
+        const promise2 = new MyPromise((resolve,reject)=>{
+
+            // fulfilled
+            if (this.state === FULFILLED) {
+                if (!onResolved)
+                    return;
+                const x = onResolved(this.val)
+                promiseResolionHandler(promise2, x, resolve, reject)
+            }
+
+            // rejected
+            if (this.state === REJECTED) {
+                const x = onRejected(this.val)
+                promiseResolionHandler(promise2, x, resolve, reject)
+            }
+
+            // pending
+            if (this.state === PENDING) {
+
+                this.resolveCallbacks.push(()=>{
+                    if (!onResolved)
+                        return
+                    const x = onResolved(this.val)
+                    promiseResolionHandler(promise2, x, resolve, reject)
+                })
+
+                this.rejectCallbacks.push(()=>{
+                    const x = onRejected(this.val)
+                    promiseResolionHandler(promise2, x, resolve, reject)
+                })
+            }
+        })
+
+        return promise2
+    }
+
+    catch(callback) {
+        return this.then(null, callback)
+    }
+
+    static resolve(value) {
+        if ((typeof value !== 'object' || typeof value !== 'function') && !value.then) {
+            return new MyPromise((resolve,reject)=>{
+                resolve(value)
+            }
+            )
+        }
+        return value
+
+    }
+    static all(promises) {
+        if (!Array.isArray(promises)) {
+            throw new Error('数据类型错误，必须是数组')
+        }
+
+        return new MyPromise((resolve,reject)=>{
+
+            if (promises.length === 0) {
+                resolve([])
+                return
+            }
+            var promiseNum = promises.length
+            var promiseResolves = new Array(promiseNum)
+            var promiseIndex = 0
+
+            for (let i = 0; i < promiseNum; i++) {
+                MyPromise.resolve(promises[i]).then(data=>{
+                    promiseResolves[i] = data
+                    promiseIndex++
+
+                    if (promiseIndex === promiseNum) {
+                        resolve(promiseResolves)
+                    }
+                }
+                , reject)
+            }
+        })
+
+    }
+
+    static allSettled(promises) {
+        if (!Array.isArray(promises)) {
+            throw new Error('数据类型错误，必须是数组')
+        }
+        return new MyPromise((resolve,reject)=>{
+            if (promises.length === 0) {
+                resolve([])
+                return
+            }
+
+            var promiseNum = promises.length
+            var promiseResolves = new Array(promiseNum)
+            var promiseIndex = 0
+
+            const resolveHandler = (index,data)=>{
+                promiseIndex++
+                promiseResolves[index] = data
+
+                if (promiseIndex === promiseNum) {
+                    resolve(promiseResolves)
+                }
+            }
+
+            for (let i = 0; i < promiseNum; i++) {
+                MyPromise.resolve(promises[i]).then(data=>{
+                    resolveHandler(i, {
+                        status: FULFILLED,
+                        value: data
+                    })
+                }
+                , err=>{
+                    resolveHandler(i, {
+                        status: REJECTED,
+                        reason: err
+                    })
+                })
+            }
+
+        })
+    }
 }
 ```
 
