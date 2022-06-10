@@ -115,7 +115,18 @@ function selectionSort(nums){
 ### 代码实现
 
 ``` javascript
-
+function insertionSort(arr){
+  var len = arr.length
+  for(var i = 0; i < len; i++){
+    for(var j = i+1; j >0; j--){
+      if(arr[j] < arr[j-1]){
+        var temp = arr[j]
+        arr[j] = arr[j-1]
+        arr[j-1] = temp
+      }
+    }
+  }
+}
 ```
 
 ### 算法分析
